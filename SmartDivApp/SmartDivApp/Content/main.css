@@ -1,0 +1,133 @@
+﻿.tblClr {
+    display: grid;
+    place-items: center center;
+}
+
+.tdCls {
+    width: 150px;
+    border: 1px solid black;
+}
+
+.trCls {
+    height: 150px;
+}
+
+.txtFld {
+    width: 101%;
+    height: 99%;
+    margin: -1px 0px 0px 2px;
+}
+
+.btnFld {
+    width: 25px;
+    top: 60px;
+}
+
+/*.cmpFld {
+    width: 101%;
+    height: 100%;
+    margin: -1px 0px 0px 2px;
+}*/
+
+.divFld {
+    width: 151px;
+    height: 148px;
+    position: absolute;
+    text-align: center;
+}
+
+input[type=text], textarea, select {
+    /*-moz-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    -webkit-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+    outline: none;
+    padding: 3px 0px 3px 3px;
+    margin: 5px 1px 3px 0px;*/
+    -moz-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    -webkit-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+    outline: none;
+    border: 1px solid #DDDDDD;
+}
+
+    input[type=text]:focus, textarea:focus, select:focus {
+        /*-moz-box-shadow: 0 0 5px #51cbee;
+        -webkit-box-shadow: 0 0 5px #51cbee;
+        box-shadow: 0 0 5px #51cbee;
+        padding: 3px 0px 3px 3px;
+        margin: 5px 1px 3px 0px;*/
+        -moz-box-shadow: 0 0 5px #51cbee;
+        -webkit-box-shadow: 0 0 5px #51cbee;
+        box-shadow: 0 0 5px #51cbee;
+        border: 1px solid #51cbee;
+    }
+
+
+div.divFld {
+    /*-moz-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    -webkit-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+    outline: none;
+    padding: 3px 0px 3px 3px;
+    margin: 5px 1px 3px 0px;
+    border: 1px solid #DDDDDD;*/
+    -moz-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    -webkit-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+    outline: none;
+    border: 0px solid #DDDDDD;
+}
+
+    div.divFld:focus {
+        /*-moz-box-shadow: 0 0 5px #51cbee;
+        -webkit-box-shadow: 0 0 5px #51cbee;
+        box-shadow: 0 0 5px #51cbee;
+        padding: 3px 0px 3px 3px;
+        margin: 5px 1px 3px 0px;
+        border: 1px solid #51cbee;*/
+        -moz-box-shadow: 0 0 5px #51cbee;
+        -webkit-box-shadow: 0 0 5px #51cbee;
+        box-shadow: 0 0 5px #51cbee;
+        border: 0px solid #51cbee;
+    }
+
+
+
+.btn-treatment-tag {
+    /*-webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    -ms-border-radius: 15px;
+    -o-border-radius: 15px;
+    border-radius: 15px;
+    border: none;*/
+    /*background-color: none !important;
+    background: none !important;
+    border: none !important;
+    opacity: 1.0 !important;*/
+    opacity: 1.0;
+    border-radius: 19px;
+    background-image: none;
+}
+
+
+
+.Btn {
+    background-color: none;
+    background: none;
+    color: #fff !important;
+    /*-webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    -ms-border-radius: 15px;
+    -o-border-radius: 15px;
+    border-radius: 15px;*/
+    border: none;
+    /*background-color: none !important;
+    background: none !important;
+    border: none !important;
+    opacity: 1.0 !important;*/
+    opacity: 1.0;
+}
