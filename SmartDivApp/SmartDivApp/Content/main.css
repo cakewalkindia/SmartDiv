@@ -1,26 +1,40 @@
-﻿.tblClr {
+﻿/*.tblClr {
     display: grid;
     place-items: center center;
-}
+}*/
 
 .tdCls {
     width: 150px;
+    min-width: 150px;
     border: 1px solid black;
+    text-align: center;
+}
+
+.thCls {
+    width: 150px;
+    min-width: 150px;
+    border: 1px solid black;
+    text-align: center;
 }
 
 .trCls {
-    height: 150px;
+    height: 31px;
+}
+
+.thtrCls {
+    height: 25px;
 }
 
 .txtFld {
-    width: 101%;
-    height: 99%;
-    margin: -1px 0px 0px 2px;
+    /* width: 101%;*/
+    /*height: 68%;*/
+    height: 100%;
+    margin: -2px 0px 0px 2px;
 }
 
 .btnFld {
     width: 25px;
-    top: 60px;
+    top: 3px;
 }
 
 /*.cmpFld {
@@ -28,10 +42,9 @@
     height: 100%;
     margin: -1px 0px 0px 2px;
 }*/
-
 .divFld {
     width: 151px;
-    height: 148px;
+    height: 35px;
     position: absolute;
     text-align: center;
 }
@@ -43,11 +56,11 @@ input[type=text], textarea, select {
     transition: all 0.3s ease-in-out;
     outline: none;
     padding: 3px 0px 3px 3px;
-    margin: 5px 1px 3px 0px;*/
+    margin: 5px 1px 3px 0px;
     -moz-transition: all 0.3s ease-in-out;
     -o-transition: all 0.3s ease-in-out;
     -webkit-transition: all 0.3s ease-in-out;
-    transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;*/
     outline: none;
     border: 1px solid #DDDDDD;
 }
@@ -113,8 +126,6 @@ div.divFld {
     background-image: none;
 }
 
-
-
 .Btn {
     background-color: none;
     background: none;
@@ -131,3 +142,36 @@ div.divFld {
     opacity: 1.0 !important;*/
     opacity: 1.0;
 }
+
+#tblMain > table {
+    /*width: 500px;*/
+    border-collapse: collapse;
+}
+
+#tblMain > thead {
+    display: block;
+    /*width: 500px;*/
+    overflow: auto;
+    color: #fff;
+    background: #000;
+}
+
+#tblMain > tbody {
+    display: block;
+    /*width: 500px;*/
+    height: 1000px;
+    background: #eae7e7;
+    overflow: auto;
+}
+
+/*th, td {
+    padding: .5em 1em;
+    text-align: left;
+    vertical-align: top;
+    border-left: 1px solid #fff;
+}*/
+
+/*body {
+    overflow-x: auto;
+    overflow-y: hidden;
+}*/

@@ -9,6 +9,7 @@ Ext.define('MyApp.view.ExtractTextField', {
     extend: 'Ext.form.Text',
     //me: this,
     //matchFieldWidth: false,
+    labelAlign: 'top',
     alias: ['widget.ExtractText'],
     //queryMode: 'local',
     //tpl: '<tpl for="."><div class="x-boundlist-item cmbtplborder">{field1} </div></tpl>',
@@ -28,6 +29,7 @@ Ext.define('MyApp.view.ExtractDropdownField', {
     extend: 'Ext.form.ComboBox',
     //me: this,
     //matchFieldWidth: false,
+    labelAlign:'top',
     alias: ['widget.ExtractDropdown'],
     //queryMode: 'local',
     tpl: '<tpl for="."><div class="x-boundlist-item cmbtplborder">{field1} </div></tpl>',
@@ -46,7 +48,8 @@ Ext.define('MyApp.view.ExtractDropdownField', {
 Ext.define('MyApp.view.ExtractButtonField', {
     extend: 'Ext.button.Button',    
     alias: ['widget.ExtractButton'],
-    cls: "txtFld"
+    cls: "txtFld",
+    labelAlign: 'top',
 });
 
 class MyExtTextField {
@@ -171,10 +174,12 @@ class MyExtButtonField {
         //    }
         //});
         //cnf.id = 'btnDropdownfield';
+        let cmpDPVal = this.currentTD.attr('cmpDPVal');
         InterventionUI.DestroyComponents();
         let mi = new MyApp.view.ExtractButtonField(cmpConfig);
         mi.render(InterventionUI.SmartDiv());
         mi.focus();
+        mi.setText(cmpDPVal);
         //}
     }
 }
