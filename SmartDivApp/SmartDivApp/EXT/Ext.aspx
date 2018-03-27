@@ -6,14 +6,17 @@
     
 <html>
 <head runat="server">
-    <title>Ext.NET Example</title>
-    <script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-            crossorigin="anonymous"></script>
+    <title>New Intervention UI</title>
+    <script src="Scripts/jquery-3.3.1.min.js"></script>
     <link href="../Content/main.css" rel="stylesheet" />
+    <script src="Scripts/main.js"></script>
+    <script src="Scripts/Enums.js"></script>
     <script src="Scripts/Config.js"></script>
     <script src="Scripts/Components.js"></script>
-    <script src="Scripts/UI.js"></script>
-    
+    <script src="Scripts/Cases/Drug.js"></script>
+    <script src="Scripts/Cases/DeviceSurgery.js"></script>
+    <script src="Scripts/Cases/BehavioralInformationalMaterial.js"></script>
+    <script src="Scripts/Cases/BehavioralSessionMeeting.js"></script>
 </head>
 <body>
     <ext:ResourceManager runat="server" Theme="Neptune" />
@@ -21,8 +24,12 @@
     <div class="divFld" id="txtEdit" tabindex="1">
         <!--<input class="txtFld" autocomplete="off" name="phone" type="email" autofocus />-->
     </div>
-
-    <div id="tableMain" class="container">
+    <div id="tableMain">
+        <table id="tblMain" class="tblCls" >
+            <tbody>
+               
+            </tbody>
+        </table>
         <%--<table class="tblClr">
             <tr class="trCls">
                 <td class='tdCls' fieldType="combo" fieldStore='["Text 11", "Text 12", "Text 13"]'>
@@ -61,6 +68,7 @@
 
         <lable class="tblClr" id="lblTab"><b>Tab Direction Change(Ctrl + Alt + Shift):-</b> Right to Left</lable>--%>
     </div>   
+
     <%--<div onkeydown="DivTextEventTest.Divkeydown(this,event)" onkeyup="DivTextEventTest.Divkeyup(this,event)">
         <input type="text" onkeydown="DivTextEventTest.Txtkeydown(this,event)" onkeyup="DivTextEventTest.Txtkeyup(this,event)"/>
     </div>

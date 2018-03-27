@@ -1,21 +1,17 @@
-﻿const ComponentType = {
-    ExtractText: "ExtractText",
-    ExtractDropdown: "ExtractDropdown",
-    ExtractButton: "ExtractButton",
-    ExtractActionButton: "ExtractActionButton"
-};
-
+﻿/// <reference path="reference.js" />
 Ext.define('MyApp.view.ExtractTextField', {
     extend: 'Ext.form.Text',
     //me: this,
     //matchFieldWidth: false,
     labelAlign: 'top',
     alias: ['widget.ExtractText'],
+    width: 167,
+    height: 33,
     //queryMode: 'local',
     //tpl: '<tpl for="."><div class="x-boundlist-item cmbtplborder">{field1} </div></tpl>',
     //displayTpl: '<tpl for=".">{field1}</tpl>',            
     //enableRegEx: true,
-    cls: "txtFld",
+    //cls: "txtFld",
     //listeners: {
     //    blur: function (cmp, eOpts) {
     //        if (!Ext.isEmpty(cmp.getValue())) {
@@ -24,18 +20,20 @@ Ext.define('MyApp.view.ExtractTextField', {
     //    }
     //}
 });
-
 Ext.define('MyApp.view.ExtractDropdownField', {
     extend: 'Ext.form.ComboBox',
     //me: this,
     //matchFieldWidth: false,
     labelAlign:'top',
     alias: ['widget.ExtractDropdown'],
+    width: 167,
+    height: 30,
     //queryMode: 'local',
     tpl: '<tpl for="."><div class="x-boundlist-item cmbtplborder">{field1} </div></tpl>',
     displayTpl: '<tpl for=".">{field1}</tpl>',
     //enableRegEx: true,
-    cls: "txtFld",
+    //cls: "txtFld",
+    queryMode: 'local',
     //listeners: {
     //    blur: function (cmp, eOpts) {
     //        if (!Ext.isEmpty(cmp.getValue())) {
@@ -44,12 +42,17 @@ Ext.define('MyApp.view.ExtractDropdownField', {
     //    }
     //}
 });
-
 Ext.define('MyApp.view.ExtractButtonField', {
     extend: 'Ext.button.Button',    
     alias: ['widget.ExtractButton'],
     cls: "txtFld",
     labelAlign: 'top',
+});
+Ext.define('MyApp.view.ExtractAddInfoField', {
+    extend: 'Ext.form.TextArea',
+    alias: ['widget.ExtractAddInfo'],
+    cls: "txtFld",
+    labelAlign: 'top'
 });
 
 class MyExtTextField {
@@ -78,15 +81,14 @@ class MyExtTextField {
 
         ////document.getElementById(this.addInComponent).innerHTML = "";
         ////document.getElementById(this.addInComponent).appendChild(mi); 
-        let cmpDPVal = this.currentTD.attr('cmpDPVal');
-        InterventionUI.DestroyComponents();         
+        let cmpDPVal = this.currentTD.attr(TdAttr.DPVal);
+        Intervention.DestroyComponents();         
         let mi = new MyApp.view.ExtractTextField(cmpConfig);
-        mi.render(InterventionUI.SmartDiv());
+        mi.render(Intervention.SmartDiv());
         mi.focus();
         mi.setValue(cmpDPVal);
     }
 };
-
 
 class MyExtDropdownField {    
     constructor(currentTD) {
@@ -125,16 +127,15 @@ class MyExtDropdownField {
             //        }
             //    }
             //});
-            let cmpDPVal = this.currentTD.attr('cmpDPVal');
-            InterventionUI.DestroyComponents();            
+            let cmpDPVal = this.currentTD.attr(TdAttr.DPVal);
+            Intervention.DestroyComponents();            
             let mi = new MyApp.view.ExtractDropdownField(cmpConfig);            
-            mi.render(InterventionUI.SmartDiv());
+            mi.render(Intervention.SmartDiv());
             mi.focus();
             mi.setValue(cmpDPVal);
         //}
     }
 }
-
 
 class MyExtButtonField {    
     constructor(currentTD) {
@@ -174,16 +175,15 @@ class MyExtButtonField {
         //    }
         //});
         //cnf.id = 'btnDropdownfield';
-        let cmpDPVal = this.currentTD.attr('cmpDPVal');
-        InterventionUI.DestroyComponents();
+        let cmpDPVal = this.currentTD.attr(TdAttr.DPVal);
+        Intervention.DestroyComponents();
         let mi = new MyApp.view.ExtractButtonField(cmpConfig);
-        mi.render(InterventionUI.SmartDiv());
+        mi.render(Intervention.SmartDiv());
         mi.focus();
-        mi.setText(cmpDPVal);
+        //mi.setText(cmpDPVal);
         //}
     }
 }
-
 
 class MyExtActionButtonField {
     constructor(currentTD) {
@@ -194,9 +194,26 @@ class MyExtActionButtonField {
     CreateComponent(cmpConfig) {
         let me = this;
         cmpConfig.me = me;        
-        InterventionUI.DestroyComponents();
+        Intervention.DestroyComponents();
         let mi = new MyApp.view.ExtractButtonField(cmpConfig);
         mi.render(this.currentTD);
         mi.focus();
     }
 }
+
+//class MyExtAddInfoField {
+//    constructor(currentTD) {        
+//        this.currentTD = currentTD;
+//    }
+
+//    CreateComponent(cmpConfig) {
+//        let me = this;
+//        cmpConfig.me = me;        
+//        let cmpDPVal = this.currentTD.attr(TdAttr.DPVal);
+//        Intervention.DestroyComponents();
+//        let mi = new MyApp.view.ExtractAddInfoField(cmpConfig);
+//        mi.render(Intervention.SmartDiv());
+//        mi.focus();
+//        mi.setValue(cmpDPVal);
+//    }
+//}

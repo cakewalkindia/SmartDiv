@@ -88,6 +88,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Readme\Ext.NET\Sample.Web.config" />
+    <Content Include="EXT\Scripts\sample-json.json" />
     <None Include="packages.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -108,9 +109,16 @@
     <Content Include="App_Readme\Transformer.NET\README.txt" />
     <Content Include="Content\main.css" />
     <Content Include="EXT\Ext.aspx" />
+    <Content Include="EXT\Scripts\Cases\BehavioralInformationalMaterial.js" />
+    <Content Include="EXT\Scripts\Cases\BehavioralSessionMeeting.js" />
+    <Content Include="EXT\Scripts\Cases\DeviceSurgery.js" />
+    <Content Include="EXT\Scripts\Cases\Drug.js" />
     <Content Include="EXT\Scripts\Components.js" />
     <Content Include="EXT\Scripts\Config.js" />
-    <Content Include="EXT\Scripts\UI.js" />
+    <Content Include="EXT\Scripts\Enums.js" />
+    <Content Include="EXT\Scripts\jquery-3.3.1.min.js" />
+    <Content Include="EXT\Scripts\reference.js" />
+    <Content Include="EXT\Scripts\main.js" />
     <Content Include="Global.asax" />
     <Content Include="HTML\FloatLabel.html" />
     <Content Include="HTML\HTML.html" />

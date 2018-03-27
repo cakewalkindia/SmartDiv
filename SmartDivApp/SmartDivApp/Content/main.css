@@ -3,18 +3,36 @@
     place-items: center center;
 }*/
 
+.tblCls {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
 .tdCls {
     width: 150px;
     min-width: 150px;
-    border: 1px solid black;
+    border: 1px solid #bfbfbf;
     text-align: center;
+    padding: 8px;
+    background-color: white;
+    vertical-align: middle;
+}
+
+.tdBtn {
+    width: 30px;
+    min-width: 30px;
+    /*border: 1px solid black;*/
+    text-align: center;
+    background-color: #eae7e7;
 }
 
 .thCls {
     width: 150px;
     min-width: 150px;
-    border: 1px solid black;
+    border: 1px solid #bfbfbf;
     text-align: center;
+    padding: 8px;
 }
 
 .trCls {
@@ -28,8 +46,8 @@
 .txtFld {
     /* width: 101%;*/
     /*height: 68%;*/
-    height: 100%;
-    margin: -2px 0px 0px 2px;
+    height: 97%;
+    /*margin: -2px 0px 0px 2px;*/
 }
 
 .btnFld {
@@ -43,8 +61,8 @@
     margin: -1px 0px 0px 2px;
 }*/
 .divFld {
-    width: 151px;
-    height: 35px;
+    width: 167px !important;
+    height: 33px;
     position: absolute;
     text-align: center;
 }
@@ -175,3 +193,61 @@ div.divFld {
     overflow-x: auto;
     overflow-y: hidden;
 }*/
+
+.trDisplayNone{
+    display:none;
+}
+
+
+
+.btn-treatment-tag-b {
+    background-color: #1257e8;
+    border-color: #1257e8;
+    /*color: #ffffff !important;*/
+    cursor: pointer;
+}
+
+.btn-treatment-tag-r {
+    background-color: #f51010;
+    border-color: #f51010;
+    /*color: #ffffff !important;*/
+    cursor: pointer;
+}
+
+.btn-treatment-tag-i {
+    background-color: #645f5f;
+    border-color: #645f5f;
+    /*color: #ffffff !important;*/
+    cursor: pointer;
+}
+
+.btn-treatment-tag-c {
+    background-color: #fff;
+    border-color: #645f5f;
+    /*color: #000000 !important;*/
+    cursor: pointer;
+}
+
+.btn-treatment-tag-color-w {
+    color: white !important;
+}
+
+.btn-treatment-tag-color-b {
+    color: black !important;
+}
+
+.btn-treatment-tag {
+    /*-webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    -ms-border-radius: 15px;
+    -o-border-radius: 15px;
+    border-radius: 15px;
+    border: none;*/
+    /*background-color: none !important;
+    background: none !important;
+    border: none !important;
+    opacity: 1.0 !important;*/
+    opacity: 1.0;
+    border-radius: 19px;
+    background-image: none;
+}
