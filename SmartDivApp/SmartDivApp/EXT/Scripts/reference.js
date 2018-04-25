@@ -6,5 +6,9 @@
 /// <reference path="cases/devicesurgery.js" />
 /// <reference path="cases/BehavioralInformationalMaterial.js" />
 /// <reference path="cases/BehavioralSessionMeeting.js" />
+/// <reference path="../extractdb/core/extractcore.js" />
+/// <reference path="../extractdb/helper/extracthelper.js" />
+/// <reference path="../extractdb/analytics/extractcreate.js" />
+
 
 

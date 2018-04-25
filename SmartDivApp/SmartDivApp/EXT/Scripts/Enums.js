@@ -29,12 +29,23 @@ const TdAttr = {
     ColSpan: "colspan",
     Type: "type",
     Config: "config",
+    DPId: "dpid",
     DPVal: "dpval",
     RowIndex: "rowindex",
     ColumnIndex: "columnindex",
     DataClass: "data-class",
-    TDType: "tdtype"
+    //TDType: "tdtype",
+    Title: "title"
 };
+
+const TblAttr = {
+    Id: "id",
+    Class: "class",
+    GroupId: "grpid",
+    IntSetIds: "intsetids",
+    //IntId: "intid",
+    CaseName: "casename",
+}
 
 const TRType = {
     Intervention: "intervention",
@@ -52,6 +63,7 @@ const ComponentType = {
     ExtractGroupName: "ExtractGroupName",
     ExtractAddInfo: "ExtractAddInfo"
 };
+
 
 const Cases = {
     CaseNo: {
@@ -98,9 +110,47 @@ const Cases = {
 
         Therapy_BehavioralInformationalMaterial: 'Therapy_BehavioralInformationalMaterial',
         Therapy_BehavioralSessionMeeting: 'Therapy_BehavioralSessionMeeting'
-    }    
+    },
+    CaseNoByCaseName: {
+        Therapy_Drug: "case1,case3",
+        Therapy_CancerIntervention: "case1,case2,case3",
+        Therapy_Radiotherapy: "case1,case8",
+        Therapy_BiologicalVaccine: "case1,case9",
+        Therapy_LifestyleModification: "case1,case18",
+        Therapy_DietarySupplement: "case1,case19",
+        Therapy_Other: "case1,case20",
+        Therapy_Device: "case1,case7",
+        Therapy_ProcedureSurgery: "case1,case11",
+        Therapy_BehavioralInformationalMaterial: "case4,case5",
+        Therapy_BehavioralSessionMeeting: "case4,case6"
+    },
+    CaseNameByCaseNo: {
+        "case1,case3": 'Therapy_Drug',
+        "case1,case2,case3": 'Therapy_CancerIntervention',
+        "case1,case8" : 'Therapy_Radiotherapy',
+        "case1,case9" : 'Therapy_BiologicalVaccine',
+        "case1,case18" : 'Therapy_LifestyleModification',
+        "case1,case19": 'Therapy_DietarySupplement',
+        "case1,case20" : 'Therapy_Other',
+        "case1,case7": 'Therapy_Device',
+        "case1,case11" : 'Therapy_ProcedureSurgery',
+        "case4,case5" : 'Therapy_BehavioralInformationalMaterial',
+        "case4,case6" : 'Therapy_BehavioralSessionMeeting'
+    }
 }
 
+const IdPrefix = {
+    Group: 'grp-',
+    InterventionSetId: 'intset',
+    InterventionId: 'int',
+}
+
+const CurrentTableObject = {
+    TableId: "tableId",
+    GroupId: "groupId",
+    CaseNo: "caseNo",
+    CaseName: "caseName"
+}
 
 
 //class App {

@@ -14,14 +14,17 @@
 class Intervention {
 
     static DestroyComponents() {
-        let childNodes = document.getElementById(Intervention.SmartDiv()).childNodes;
-        for (let i = childNodes.length - 1, cmp; i >= 0; i--) {
-            cmp = Ext.getCmp(childNodes[i].id);
-            if (cmp) {
-                cmp.destroy();
-                //Ext.destroy(cmp);
+        return new Promise((resolve, reject) => {
+            let childNodes = document.getElementById(Intervention.SmartDiv()).childNodes;
+            for (let i = childNodes.length - 1, cmp; i >= 0; i--) {
+                cmp = Ext.getCmp(childNodes[i].id);
+                if (cmp) {
+                    cmp.destroy();
+                    //Ext.destroy(cmp);
+                }
             }
-        }
+            return resolve();
+        });
     }
 
     static SmartDiv() {
@@ -29,36 +32,79 @@ class Intervention {
     }
 
     static MainTableId() {
-        return 'tblMain';
+        return 'ext-data-31163145256'; //'tblMain';
     }
 
     static MainTableIdJQ() {
-        return '#tblMain';
+        return '#ext-data-31163145256';//'#tblMain';
     }
 
     static GetParameterByName(name) {
         let url = window.location.href;
         name = name.replace(/[\[\]]/g, "\\$&");
-        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        let regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
             results = regex.exec(url);
         if (!results) return null;
         if (!results[2]) return '';
         return decodeURIComponent(results[2].replace(/\+/g, " "));
     }
 
-    SmartDivPosition() {
-        let txt = $('#' + Intervention.SmartDiv());
-        let cmpType = this.currentTD.attr(TdAttr.Type);
+    GetCurrentTableData(curTD) {
+        if (typeof curTD == "undefined") {
+            curTD = IUI.currentTD;
+        }
+        let _curTbl = curTD.closest('table');
+        let _tblId = _curTbl.attr(TblAttr.Id);
+        let _gpId = _curTbl.attr(TblAttr.GroupId);
+        let _caseNo = curTD.parent('tr').attr(TrAttr.CaseNo);
+        let _caseName = curTD.parent('tr').attr(TrAttr.CaseName);
 
-        if (cmpType != ComponentType.ExtractActionButton) {
-            txt.width(this.currentTD.width());
-            txt.offset({ top: this.currentTD.offset().top, left: this.currentTD.offset().left });
+        let obj = {};
+        obj[CurrentTableObject.TableId] = _tblId;
+        obj[CurrentTableObject.GroupId] = _gpId;
+        obj[CurrentTableObject.CaseNo] = _caseNo;
+        obj[CurrentTableObject.CaseName] = _caseName;
+
+        return obj;
+    }
+
+    SmartDivPosition() {
+        if (IUI.currentTD.length > 0) {
+            let txt = $('#' + Intervention.SmartDiv());
+            let cmpType = IUI.currentTD.attr(TdAttr.Type);
+            
+            if (cmpType != ComponentType.ExtractActionButton) {
+
+                //let grpId = IUI.currentTD.closest('table').attr(TblAttr.GroupId);
+                //let lstPar = Ext.getCmp(grpId).query("[name='mainInterventionParent']");
+
+                //if (lstPar) {
+                //    //lstPar[0].getEl().setScrollTop(lstPar[0].getEl().getScrollTop() - IUI.currentTD.offset().top);
+                //    lstPar[0].getEl().setScrollLeft(lstPar[0].getEl().getScrollLeft() + 167);
+                //    //lstPar[0].getEl().setScrollLeft(txt.position().left);
+                //}
+
+                if (cmpType == ComponentType.ExtractButton) {
+                    txt.width(IUI.currentTD[0].offsetWidth - 2);
+                    txt.offset({ top: IUI.currentTD.offset().top + 1, left: IUI.currentTD.offset().left + 1 });
+                } else {
+                    //txt.width(IUI.currentTD.width());
+                    txt.width(IUI.currentTD[0].offsetWidth);
+                    txt.offset({ top: IUI.currentTD.offset().top, left: IUI.currentTD.offset().left });
+                }
+
+                
+            }
+
+            //window.setTimeout(() => {
+            this.CreateComponent();
+            //}, 250);
         }
     }
 
     AddMainTable() {
         // get the reference for the body
-        let div = document.getElementById("tableMain");
+        let div = document.getElementById("divMain");
 
         let lbl = document.createElement("label");
         //lbl.setAttribute("class", "tblClr");
@@ -127,7 +173,7 @@ class Intervention {
         ////    tblBody.appendChild(row);
         ////}
 
-        
+
         let _caseName = Intervention.GetParameterByName('case');
 
         switch (_caseName) {
@@ -181,7 +227,7 @@ class Intervention {
 
 
 
-        
+
 
 
 
@@ -215,59 +261,71 @@ class Intervention {
 
 
 
-        if (this.currentTD == null) {
-            this.tabDirection = TabDirection.LeftToRight;
-            this.currentTD = $('td:first', $(Intervention.MainTableIdJQ()).find('tbody'));
-            this.SmartDivPosition();
-            //txt.offset({ top: this.currentTD.offset().top, left: this.currentTD.offset().left });
+        //if (IUI.currentTD == null) {
+        this.tabDirection = TabDirection.LeftToRight;
+        IUI.currentTD = $('td:first', $(Intervention.MainTableIdJQ()).find('tbody'));
+        this.SmartDivPosition();
+        //txt.offset({ top: this.currentTD.offset().top, left: this.currentTD.offset().left });
 
-            let txt1 = document.getElementById(Intervention.SmartDiv());
-            txt1.addEventListener("keydown", (e) => this.OnTab(txt1, e));
+        let txt1 = document.getElementById(Intervention.SmartDiv());
+        txt1.addEventListener("keydown", (e) => this.OnTab(txt1, e));
 
-            txt1.addEventListener("keyup", (e) => this.OnKeyUp(txt1, e));
+        txt1.addEventListener("keyup", (e) => this.OnKeyUp(txt1, e));
 
-            //$(".txtFld").on('keydown', "#txtEdit" , () => {
-            //    this.onTab(txtFld, e);
-            //});
-            //txt.on("keydown", (e: KeyboardEvent) => {
-            //    this.onTab(txt, e);
-            //});
-            window.setTimeout(() => {
-                this.CreateComponent();
-            }, 250);
-            //let lstTD = document.getElementById(Intervention.MainTableId()).getElementsByTagName('td');
-            //for (let i = 0; i < lstTD.length; i++) {
-            //    let _cmpTyp = $(lstTD[i]).attr(TdAttr.Type);
-            //    if (typeof _cmpTyp !== 'undefined' && _cmpTyp != ComponentType.ExtractActionButton) {
-            //        lstTD[i].addEventListener('click', (e) => this.OnTDClick(lstTD[i], e));
-            //    }
-            //}
-        }
+        //$(".txtFld").on('keydown', "#txtEdit" , () => {
+        //    this.onTab(txtFld, e);
+        //});
+        //txt.on("keydown", (e: KeyboardEvent) => {
+        //    this.onTab(txt, e);
+        //});
+        //window.setTimeout(() => {
+        //    this.CreateComponent();
+        //}, 250);
+        //let lstTD = document.getElementById(Intervention.MainTableId()).getElementsByTagName('td');
+        //for (let i = 0; i < lstTD.length; i++) {
+        //    let _cmpTyp = $(lstTD[i]).attr(TdAttr.Type);
+        //    if (typeof _cmpTyp !== 'undefined' && _cmpTyp != ComponentType.ExtractActionButton) {
+        //        lstTD[i].addEventListener('click', (e) => this.OnTDClick(lstTD[i], e));
+        //    }
+        //}
+        //}
     }
 
     TabIndexTD() {
-        return $(Intervention.MainTableIdJQ()).find('tbody').find('td').length + 1;
+        //return $(Intervention.MainTableIdJQ()).find('tbody').find('td').length + 1;
+        this.tabIdx = this.tabIdx ? this.tabIdx : 0;
+        return ++this.tabIdx;
     }
 
     OnTDClick(txtFld, e) {
         if (e.currentTarget) {
-            this.currentTD = $(e.currentTarget);
+            IUI.prevTD = IUI.currentTD;
+            IUI.currentTD = $(e.currentTarget);
             this.SmartDivPosition();
-            window.setTimeout(() => {
-                this.CreateComponent();
-            }, 250);
+            //window.setTimeout(() => {
+            //    this.CreateComponent();
+            //}, 250);
         }
     }
 
     SetCurrentTD(_curTD) {
-        var isValid = true;
-        this.currentTD = _curTD;
-        let cmpDPVal = this.currentTD.attr(TdAttr.DPVal);
-        let cmpType = this.currentTD.attr(TdAttr.Type);
-        if (cmpDPVal == undefined || (cmpType == ComponentType.ExtractActionButton)) {
-            isValid = true;
+        let isValid = true;
+        if (!_curTD.hasClass('trDisplayNone')) {
+            let prevTDDPVal = IUI.currentTD.attr(TdAttr.DPVal);
+            let prevTDType = IUI.currentTD.attr(TdAttr.Type);
+            if (prevTDDPVal != undefined && (prevTDType != ComponentType.ExtractActionButton)) {
+                IUI.prevTD = IUI.currentTD;
+            }
+            IUI.currentTD = _curTD;
+            let cmpDPVal = IUI.currentTD.attr(TdAttr.DPVal);
+            let cmpType = IUI.currentTD.attr(TdAttr.Type);
+            if (cmpDPVal == undefined || (cmpType == ComponentType.ExtractActionButton)) {
+                isValid = true;
+            } else {
+                isValid = false;
+            }
         } else {
-            isValid = false;
+            IUI.currentTD = _curTD;
         }
         return isValid;
     }
@@ -277,18 +335,18 @@ class Intervention {
             if (IsShiftKey) {
                 let isValid = true;
                 do {
-                    let _curTD = this.currentTD.prev('td');
+                    let _curTD = IUI.currentTD.prev('td');
                     if (_curTD.length > 0) {
                         isValid = this.SetCurrentTD(_curTD);
                     } else {
-                        if (this.currentTD.parent('tr').prevAll('tr:visible').not('.trDisplayNone').length > 0) {
+                        if (IUI.currentTD.parent('tr').prevAll('tr:visible').not('.trDisplayNone').length > 0) {
                             //currentTD = currentTD.parent('tr').next('tr').first('td');
-                            _curTD = $('td:last', this.currentTD.parent('tr').prevAll('tr:visible').not('.trDisplayNone').last());
+                            _curTD = $('td:last', IUI.currentTD.parent('tr').prevAll('tr:visible').not('.trDisplayNone').first());
                             if (_curTD.length > 0) {
                                 isValid = this.SetCurrentTD(_curTD);
                             }
                         } else {
-                            _curTD = $('td:last', $('tr:visible:last', $(Intervention.MainTableIdJQ()).find('tbody')));
+                            _curTD = $('td:last', $('tr:visible:last', IUI.currentTD.closest('tbody')));
                             if (_curTD.length > 0) {
                                 isValid = this.SetCurrentTD(_curTD);
                             }
@@ -298,19 +356,19 @@ class Intervention {
             } else {
                 let isValid = true;
                 do {
-                    let _curTD = this.currentTD.next('td');
+                    let _curTD = IUI.currentTD.next('td');
                     if (_curTD.length > 0) {
                         isValid = this.SetCurrentTD(_curTD);
                     } else {
                         //if (this.currentTD.parent('tr').next('tr:not(.trDisplayNone)').length > 0) {
-                        if (this.currentTD.parent('tr').nextAll('tr:visible').not('.trDisplayNone').length > 0) {
+                        if (IUI.currentTD.parent('tr').nextAll('tr:visible').not('.trDisplayNone').length > 0) {
                             //currentTD = currentTD.parent('tr').next('tr').first('td');
-                            _curTD = $('td:first', this.currentTD.parent('tr').nextAll('tr:visible').not('.trDisplayNone').first());
+                            _curTD = $('td:first', IUI.currentTD.parent('tr').nextAll('tr:visible').not('.trDisplayNone').first());
                             if (_curTD.length > 0) {
                                 isValid = this.SetCurrentTD(_curTD);
                             }
                         } else {
-                            _curTD = $('td:first', $(Intervention.MainTableIdJQ()).find('tbody'));
+                            _curTD = $('td:first', IUI.currentTD.closest('tbody'));
                             if (_curTD.length > 0) {
                                 isValid = this.SetCurrentTD(_curTD);
                             }
@@ -322,23 +380,23 @@ class Intervention {
             if (IsShiftKey) {
                 let isValid = true;
                 let _Cnt = 1;
-                let _curClmIdx = this.currentTD.attr(TdAttr.ColumnIndex);
+                let _curClmIdx = IUI.currentTD.attr(TdAttr.ColumnIndex);
                 do {
 
-                    let _curTD = this.currentTD;
-                    let _prvRowIdx = this.currentTD.parent('tr').index() - _Cnt;
+                    let _curTD = IUI.currentTD;
+                    let _prvRowIdx = _curTD.parent('tr').index() - _Cnt;
 
                     if (_prvRowIdx < 0) {
-                        _prvRowIdx = $(Intervention.MainTableIdJQ()).find('tbody').find('tr:visible').not('.trDisplayNone').last().index();
+                        _prvRowIdx = IUI.currentTD.closest('tbody').find('tr:visible').not('.trDisplayNone').last().index();
                         _curClmIdx = isNaN(Number(_curClmIdx)) ? 1 : Number(_curClmIdx) - 1;
 
                         if (_curClmIdx == 0) {
-                            let _lstClmIdx = $(Intervention.MainTableIdJQ()).find('tbody').find('tr:visible').not('.trDisplayNone').last().find('td:last').attr(TdAttr.ColumnIndex);
+                            let _lstClmIdx = IUI.currentTD.closest('tbody').find('tr:visible').not('.trDisplayNone').last().find('td:last').attr(TdAttr.ColumnIndex);
                             _curClmIdx = isNaN(Number(_lstClmIdx)) ? 1 : Number(_lstClmIdx);
                         }
                     }
 
-                    let _prvTr = $(Intervention.MainTableIdJQ()).find('tbody').find('tr').eq(_prvRowIdx); //parent('tbody').find('tr').eq(_prvRowIdx);
+                    let _prvTr = $IUI.currentTD.closest('tbody').find('tr').eq(_prvRowIdx); //parent('tbody').find('tr').eq(_prvRowIdx);
 
                     if (_prvTr.length > 0) {
                         if (_prvTr.find(`td[columnindex='${_curClmIdx}']`).length > 0) {
@@ -400,8 +458,9 @@ class Intervention {
             } else {
                 let isValid = true;
                 let _Cnt = 1;
-                let _curClmIdx = this.currentTD.attr(TdAttr.ColumnIndex);
-                let _curTD = this.currentTD;
+                let _curTD = IUI.currentTD;
+                let _curClmIdx = _curTD.attr(TdAttr.ColumnIndex);
+
                 do {
                     //let _curTD = this.currentTD;                    
                     let _nxtRowIdx = _curTD.parent('tr').nextAll('tr:visible').first().index();
@@ -533,8 +592,8 @@ class Intervention {
                 //    this.currentTD[0].innerHTML = txtVal;
                 //    txt.val("");
                 //}
-                if (this.currentTD == null) {
-                    this.currentTD = $('td:first', $(Intervention.MainTableIdJQ()).find('tbody'));
+                if (IUI.currentTD == null) {
+                    IUI.currentTD = $('td:first', IUI.currentTD.closest('tbody'));
                 }
                 else {
                     this.ComputeTD(e.shiftKey);
@@ -600,11 +659,9 @@ class Intervention {
                 }
             }
 
-            if (this.currentTD) {
+            if (IUI.currentTD) {
                 this.SmartDivPosition();
-                window.setTimeout(() => {
-                    this.CreateComponent();
-                }, 250);
+
                 //// let left = currentTD.offsetLeft;
                 //// let top = currentTD.offsetTop;
                 //// b.style.top = top;
@@ -638,18 +695,21 @@ class Intervention {
 
     CreateComponent() {
         let me = this;
-        let cmpType = me.currentTD.attr(TdAttr.Type);
-        let cmpConfig = me.currentTD.attr(TdAttr.Config);
-        let tdType = me.currentTD.attr(TdAttr.TDType);
+        let cmpType = IUI.currentTD.attr(TdAttr.Type);
+        let cmpConfig = IUI.currentTD.attr(TdAttr.Config);
+        //let tdType = IUI.currentTD.attr(TdAttr.TDType);
         switch (cmpType) {
             case ComponentType.ExtractText:
-                new MyExtTextField(me.currentTD).CreateComponent(ComponentList[tdType][cmpConfig]['config']);
+                //new MyExtTextField(IUI.currentTD).CreateComponent(ComponentList[tdType][cmpConfig]['config']);
+                new MyExtTextField(ComponentList[cmpConfig]['config']);
                 break;
             case ComponentType.ExtractDropdown:
-                new MyExtDropdownField(me.currentTD).CreateComponent(ComponentList[tdType][cmpConfig]['config']);
+                //new MyExtDropdownField(IUI.currentTD).CreateComponent(ComponentList[tdType][cmpConfig]['config']);
+                new MyExtDropdownField(ComponentList[cmpConfig]['config']);
                 break;
             case ComponentType.ExtractButton:
-                new MyExtButtonField(me.currentTD).CreateComponent(ComponentList[tdType][cmpConfig]['config']);
+                //new MyExtButtonField(IUI.currentTD).CreateComponent(ComponentList[tdType][cmpConfig]['config']);
+                new MyExtButtonField(ComponentList[cmpConfig]['config']);
                 break;
             //case ComponentType.ExtractAddInfo:
             //    new MyExtAddInfoField(me.currentTD).CreateComponent(Config[cmpConfig]());
@@ -660,44 +720,140 @@ class Intervention {
         }
     }
 
+    //#region TD
+    createTable(tableId, grpId, intSetIds, caseName) {
+        let tbl = document.createElement("table");
+        tbl.setAttribute(TblAttr.Id, tableId);
+        tbl.setAttribute(TblAttr.Class, "tblCls");
+        tbl.setAttribute(TblAttr.GroupId, grpId);
+        tbl.setAttribute(TblAttr.IntSetIds, intSetIds);
+        tbl.setAttribute(TblAttr.CaseName, caseName);
+        let tblBody = document.createElement("tbody");
+        tbl.appendChild(tblBody);
+        return tbl;
+    }
+
     CreateEmptyTD(colspan) {
         let cell = document.createElement("td");
         cell.setAttribute(TdAttr.ColSpan, colspan);
+        cell.setAttribute(TdAttr.Class, "tdColSpan");
         return cell;
     }
-    CreateTD(component) {
+
+    GetTDText(component, dpValue) {
+        let tdText = dpValue;
+        if (component['name'] == ComponentList.FixedDose["name"]) {
+            tdText = ComponentList.FixedDose.getTDDispValue(dpValue);
+        } 
+        return tdText;
+    }
+
+    CreateDP(component, typeId, dpId) {
+        //if (component['name'] == ComponentList.StudyPhase["name"]) {
+
+        //} else {
+            let dp = {};
+            if (dpId) {
+                dp = Extract.Data.Datapoints[dpId]
+            } else {
+                let _dpVal = "";
+                if (!Ext.isEmpty(component['dpDefaultValue'])) {
+                    _dpVal = component['dpDefaultValue'];
+                }
+                dp = Extract.Helper.createDatapointAddToSource(Extract.Datapoint.VALUETYPE.MEMO, component['dpName'],
+                    _dpVal, Extract.Datapoint.STATE.ADDED, 1, 1, component['dpSourceType'], typeId, component['dpSource']);
+
+            }
+            return dp;
+        //}
+    }
+
+    CreateTD(row, component, typeId, dpId, tdCls) {
         let cell = document.createElement("td");
-        cell.setAttribute(TdAttr.Class, component['cssClass']);
+        //if (typeof tdClass !== "undefined") {
+        //    trClass += "trCls";
+        //}
+
+        //if (component['name'] == ComponentList.FixedDoseCombinationName["name"]) {
+
+        //    let _dpVal = $(row).find(`td[${TdAttr.Config}='${ComponentList.FixedDose['name']}']`).attr(TdAttr.DPVal);
+        //    if (_dpVal == "No") {
+        //        component['cssClass'] += " trDisplayNone";
+        //    }
+        //}
+        let _tdCls = component['cssClass'];
+        if (tdCls) {
+            _tdCls += ` ${tdCls}`;
+        }
+
+
+
+        cell.setAttribute(TdAttr.Class, _tdCls);
         cell.setAttribute(TdAttr.TabIndex, top.IUI.TabIndexTD());
         //cell.setAttribute(TdAttr.RowIndex, rowIndex);
         cell.setAttribute(TdAttr.Type, component['compType']);
         cell.setAttribute(TdAttr.ColumnIndex, component['columnIndex']);
         cell.setAttribute(TdAttr.Config, component['name']);
-        cell.setAttribute(TdAttr.DPVal, component['dpValue']);
-        cell.setAttribute(TdAttr.TDType, component['type']);
+        cell.setAttribute(TdAttr.Title, component['dpName']);
+
+        //let _dpVal = "";
+        //if (dpId) {
+        //    cell.setAttribute(TdAttr.DPId, dpId);
+        //    _dpVal = Extract.Data.Datapoints[dpId][component["dpFieldtoUpdate"]]
+        //} else {            
+        //    if (!Ext.isEmpty(component['dpDefaultValue'])) {
+        //        _dpVal = component['dpDefaultValue'];
+        //    }
+        //    let _dp = Extract.Helper.createDatapointAddToSource(Extract.Datapoint.VALUETYPE.MEMO, component['dpName'],
+        //        _dpVal, Extract.Datapoint.STATE.ADDED, 1, 1, component['dpSourceType'], typeId, component['dpSource']);
+        //    cell.setAttribute(TdAttr.DPId, _dp.id);
+        //    dpId = _dp.id;
+        //}
+
+        
+
+        let _dp = this.CreateDP(component, typeId, dpId);
+        dpId = _dp.id;
+        cell.setAttribute(TdAttr.DPId, _dp.id);
+        let _dpVal = _dp[component['dpFieldtoUpdate']];
+
+        cell.setAttribute(TdAttr.DPVal, _dpVal);
+
+        //cell.setAttribute(TdAttr.TDType, component['type']);
         if (typeof component['compType'] !== 'undefined' && component['compType'] != ComponentType.ExtractActionButton) {
             cell.addEventListener('click', (e) => this.OnTDClick(cell, e));
-
             //cell.addEventListener('load', (e) => top.IUI.OnTDClick(cell, e));            
         }
-        if (!Ext.isEmpty(component['cellText'])) {
-            let _cellText = document.createTextNode(component['cellText']);
-            cell.appendChild(_cellText);
+        //if (!Ext.isEmpty(component['cellText'])) {
+        if (Ext.isEmpty(_dpVal)) {
+            _dpVal = component['dpName']
+            if (_dpVal.length > 18) {
+                _dpVal = _dpVal.substring(0, 18) + "...";
+            }
         }
 
-        let data_cls = component['name'];
-        if (data_cls == 'FixedDoseIntervention') {
-            data_cls = ComponentList.Intervention.Intervention.name;
-        } else if (data_cls == 'FixedDoseConcentration') {
-            data_cls = ComponentList.Intervention.Manufacturer.name;
-        } else if (data_cls == 'FixedDoseUnit') {
-            data_cls = ComponentList.Intervention.Brand.name;
-        }
+        
+        let _cellText = document.createTextNode(this.GetTDText(component,_dpVal));
+        cell.appendChild(_cellText);
+        
+        //}
 
-        cell.setAttribute(TdAttr.DataClass, data_cls);
-        return cell;
+        //let data_cls = component['name'];
+        //if (data_cls == 'FixedDoseIntervention') {
+        //    data_cls = ComponentList.Intervention.Intervention.name;
+        //} else if (data_cls == 'FixedDoseConcentration') {
+        //    data_cls = ComponentList.Intervention.Manufacturer.name;
+        //} else if (data_cls == 'FixedDoseUnit') {
+        //    data_cls = ComponentList.Intervention.Brand.name;
+        //}
+
+        //cell.setAttribute(TdAttr.DataClass, data_cls);
+        row.appendChild(cell);
+        //return cell;
+        return dpId;
     }
-    CreateActionTD(component, props) {
+
+    CreateActionTD(row, component, props) {
         let cell = document.createElement("td");
         cell.setAttribute(TdAttr.Class, component['cssClass']);
         cell.setAttribute(TdAttr.TabIndex, top.IUI.TabIndexTD());
@@ -705,17 +861,54 @@ class Intervention {
         cell.setAttribute(TdAttr.Type, component['compType']);
         cell.setAttribute(TdAttr.ColumnIndex, component['columnIndex']);
         cell.setAttribute(TdAttr.Config, component['name']);
-        cell.setAttribute(TdAttr.TDType, component['type']);
+        //cell.setAttribute(TdAttr.TDType, component['type']);
         if (typeof props === "undefined") {
             props = {};
         }
 
         let config = Config.AppendProps(component['config'], props);
 
-        new MyExtActionButtonField(cell).CreateComponent(config);
-        return cell;
+        //new MyExtActionButtonField(cell).CreateComponent(config);
+        new MyExtActionButtonField(cell, config);
+        row.appendChild(cell);
+        //return cell;
     }
 
+    //#endregion
+
+    //#region DP Operation
+    DeleteDP(intSetId, lstTD) {
+        for (var i = 0; i < lstTD.length; i++) {
+            let dpId = $(lstTD[i]).attr(TdAttr.DPId);
+            if (dpId) {
+                let config = $(lstTD[i]).attr(TdAttr.Config);
+                let comp = ComponentList[config];
+                Extract.Helper.deleteDatapoint(comp['dpSourceType'], intSetId, comp['dpSource'], dpId);
+            }
+        }
+    }
+
+    GetDPfromDPList(dpList, dpName) {
+        return dpList.find(a => { return a.Name == dpName });
+    }
+
+    GetDPId(sourceObj, component) {
+        let _src = Extract.Helper.getSourceOthers(sourceObj, component['dpSource']);
+        let _dp = this.GetDPfromDPList(_src.Datapoints, component['dpName']); //_src.Datapoints.filter(a => { return a.Name == component['dpName'] });
+        if (_dp) {
+            return _dp.id;
+        }
+        return "";
+    }
+
+    GetDPValue(sourceObj, component) {
+        let _src = Extract.Helper.getSourceOthers(sourceObj, component['dpSource']);
+        return _src.Datapoints.find((a) => { return a.Name == component['dpName'] })[component['dpFieldtoUpdate']];
+    }
+
+    //#endregion
+
+    //#region Commented
     //CreatePhaseTR(CaseName, RowIndexIntervention, RowIndexPhase) {
     //    let row = document.createElement("tr");
     //    row.setAttribute(TrAttr.Class, "trCls");
@@ -751,40 +944,194 @@ class Intervention {
     //    return row;
     //}
 
-    
+
 
     //InterventionFields(rowNo) {
     //    let mainTbl = document.getElementById(Intervention.MainTableId());
     //    let tblBody = mainTbl.getElementsByTagName('tbody')[0];        
     //    this.CaseDrug(tblBody, caseNo, rowNo);
     //}
+
+    //#endregion
+
+    //#region Study
+    getStudy() {
+        let me = this;
+        Extract.Helper.getStudyData().then(() => {
+            me.SetInterventions();
+        });
+    }
+
+    SetInterventions() {
+        let me = this;
+        let lstGrps = Extract.Helper.getEntityAsArray(Extract.EntityTypes.Groups);
+        for (let i = 0; i < lstGrps.length; i++) {
+            let grp = lstGrps[i];
+            //let cases = [];
+            let isetCases = [];
+            let iSets = Extract.Helper.getEntityListByArrayId(grp.InterventionSets, Extract.EntityTypes.InterventionSets);
+            for (let j = 0; j < iSets.length; j++) {
+                let InterventionSet = iSets[j];
+                //let _tbl = me.createTable(InterventionSet.id);
+                if (InterventionSet.caseNo != null && InterventionSet.isDeleted != true) {
+                    let _curCase = InterventionSet.caseNo.sort().join();
+                    let _Case = isetCases.filter(a => { return a.strCase == _curCase });
+                    if (_Case.length > 0) {
+                        let _Case = isetCases.filter(a => { return a.strCase == _curCase });
+                        if (_Case.length > 0) {
+                            _Case[0]["intSetId"].push(InterventionSet.id);
+                        }
+                    } else {
+                        //cases.push(_curCase);
+                        let obj = {};
+                        obj["strCase"] = _curCase;
+                        obj["intSetId"] = [];
+                        obj["intSetId"].push(InterventionSet.id);
+                        isetCases.push(obj);
+                    }
+                }
+            }
+
+            me.createISetTableContainer(grp.id, grp.name, isetCases);
+        }
+
+
+        if (IUI.GroupTable.length > 0 && IUI.GroupTable[0].TableIds.length > 0) {
+            IUI.tabDirection = TabDirection.LeftToRight;
+            IUI.currentTD = $('td:first', $('#' + IUI.GroupTable[0].TableIds[0].tableId).find('tbody'));
+            IUI.SmartDivPosition();
+            //txt.offset({ top: this.currentTD.offset().top, left: this.currentTD.offset().left });
+
+            let txt1 = document.getElementById(Intervention.SmartDiv());
+            txt1.addEventListener("keydown", (e) => IUI.OnTab(txt1, e));
+
+            txt1.addEventListener("keyup", (e) => IUI.OnKeyUp(txt1, e));
+        }
+
+
+        for (let i = 0; i < IUI.GroupTable.length; i++) {
+            let _grp = IUI.GroupTable[i];
+            for (let j = 0; j < _grp.TableIds.length; j++) {
+                let _tblObj = _grp.TableIds[j];
+                switch (_tblObj.caseName) {
+                    case Cases.CaseName.Therapy_Drug:
+                    case Cases.CaseName.Therapy_CancerIntervention:
+                    case Cases.CaseName.Therapy_Radiotherapy:
+                    case Cases.CaseName.Therapy_BiologicalVaccine:
+                    case Cases.CaseName.Therapy_LifestyleModification:
+                    case Cases.CaseName.Therapy_DietarySupplement:
+                    case Cases.CaseName.Therapy_Other:
+                        let _drg = new Drug();
+                        _drg[CurrentTableObject.GroupId] = _grp.GroupId;
+                        _drg[CurrentTableObject.TableId] = _tblObj.tableId;
+                        _drg[CurrentTableObject.CaseNo] = Cases.CaseNo[_tblObj.caseName].sort().toString();
+                        _drg[CurrentTableObject.CaseName] = _tblObj.caseName;
+
+                        _drg.SetInterventions(_tblObj.intSetId);
+                        break;
+
+                    case Cases.CaseName.Therapy_Device:
+                    case Cases.CaseName.Therapy_ProcedureSurgery:
+                        let _ds = new DeviceSurgery();
+                        _ds[CurrentTableObject.GroupId] = _grp.GroupId;
+                        _ds[CurrentTableObject.TableId] = _tblObj.tableId;
+                        _ds[CurrentTableObject.CaseNo] = Cases.CaseNo[_tblObj.caseName].sort().toString();
+                        _ds[CurrentTableObject.CaseName] = _tblObj.caseName;
+                        _ds.SetInterventions(_tblObj.intSetId);
+                        break;
+
+                    case Cases.CaseName.Therapy_BehavioralInformationalMaterial:
+                        let _im = new BehavioralInformationalMaterial();
+                        _im[CurrentTableObject.GroupId] = _grp.GroupId;
+                        _im[CurrentTableObject.TableId] = _tblObj.tableId;
+                        _im[CurrentTableObject.CaseNo] = Cases.CaseNo[_tblObj.caseName].sort().toString();
+                        _im[CurrentTableObject.CaseName] = _tblObj.caseName;
+                        _im.SetInterventions(_tblObj.intSetId);
+                        break;
+
+                    case Cases.CaseName.Therapy_BehavioralSessionMeeting:
+                        let _sm = new BehavioralSessionMeeting();
+                        _sm[CurrentTableObject.GroupId] = _grp.GroupId;
+                        _sm[CurrentTableObject.TableId] = _tblObj.tableId;
+                        _sm[CurrentTableObject.CaseNo] = Cases.CaseNo[_tblObj.caseName].sort().toString();
+                        _sm[CurrentTableObject.CaseName] = _tblObj.caseName;
+                        _sm.SetInterventions(_tblObj.intSetId);
+                        break;
+
+                    default:
+                }
+            }
+        }
+    }
+
+    createISetTableContainer(grpId, grpName, isetCases) {
+        let newIntSet = new MyApp.view.NewIntervention({ id: grpId, grpId: grpId, grpName: grpName /*isetCases: isetCases,  tbl: html*/ });
+        let cntInt = newIntSet.query("[name='mainInterventionParent']");
+        App.tpIntervention.add(newIntSet);
+        let _cnt = document.getElementById(cntInt[0].getBody().dom.id);
+        let _grpObj = { GroupId: grpId, GroupName: grpName, TableIds: [] };
+        for (let i = 0; i < isetCases.length; i++) {
+            let tableId = `${IdPrefix.Group}${grpId}-${i + 1}`;
+            let _csObj = { caseNo: isetCases[i].strCase, caseName: Cases.CaseNameByCaseNo[isetCases[i].strCase], tableId, intSetId: isetCases[i].intSetId };
+            _grpObj.TableIds.push(_csObj);
+            _cnt.appendChild(IUI.createTable(tableId, grpId, isetCases[i].intSetId.join(), Cases.CaseNameByCaseNo[isetCases[i].strCase]));
+            if (i != isetCases.length - 1) {
+                _cnt.appendChild(document.createElement("hr"));
+            }
+        }
+        IUI.GroupTable.push(_grpObj);
+        //new Drug().setDrug(grpId);    
+    }
+
+    //static createTable(tableId, grpId, intSetIds, strCase) {
+    //    //let tbl = document.createElement("table");
+    //    //tbl.setAttribute(TdAttr.Class, "tblCls");
+    //    //tbl.setAttribute(TdAttr.Id, grpId);
+    //    //let tblBody = document.createElement("tbody");
+    //    //tbl.appendChild(tblBody);
+    //    //return tbl;
+    //    //return new Ext.XTemplate(`<table id="${tableId}" ${TblAttr.intSetIds}="${intSetIds}" ${TblAttr.CaseName}="${strCase}" class="tblCls" ><tbody></tbody></table>`).html;
+    //    //return `<table id="${tableId}" ${TblAttr.GroupId}="${grpId}" ${TblAttr.intSetIds}="${intSetIds}" ${TblAttr.CaseName}="${strCase}" class="tblCls" ><tbody></tbody></table>`;
+    //}
+
+    //#endregion
 }
 
-
-
-window.onload = () => {
-    top.IUI = new Intervention();
-    top.IUI.AddMainTable();   
-
-    //$.getJSON("Scripts/sample-json.json", function(data) {
-    //    top.Study = {};
-    //    top.Study.Data = data;
-    //});
-
-    //$(document).keydown(function (evt) {
-    //    if (evt.keyCode == 73 && (evt.ctrlKey)) { //73==>I
-    //        debugger;
-    //        let _curRowIdx = IUI.currentTD.parent('tr').attr(TrAttr.RowIndexIntervention);
-    //        let lstIntTr = $(Intervention.MainTableIdJQ()).find('tbody').find(`tr[${TrAttr.TRType}=${TRType.Intervention}]tr[${TrAttr.RowIndexIntervention}=${_curRowIdx}]`);
-    //        if (lstIntTr.length > 0) {
-    //            let lstTdAdd = $(Intervention.MainTableIdJQ()).find('tbody').find(`tr[${TrAttr.TRType}=${TRType.Intervention}]tr[${TrAttr.RowIndexIntervention}=${_curRowIdx}]`).find(`td[config='AddIntervention']`)
-    //            if (lstTdAdd.length > 0 && lstTdAdd[0].children.length > 0) {
-    //                let btnAdd = Ext.getCmp(lstTdAdd.eq(lstTdAdd.length - 1)[0].children[0].id);
-    //                if (btnAdd && !btnAdd.hidden) {
-    //                    btnAdd.fireEvent('click', btnAdd);
-    //                }
-    //            }
-    //        }
-    //    }
-    //});
+App = {
+    loadStudy: () => {
+        IUI = new Intervention();
+        IUI.GroupTable = IUI.GroupTable ? IUI.GroupTable : [];
+        IUI.getStudy();
+    }
 }
+
+//#region Commented Window Load
+//window.onload = () => {
+
+//    IUI = new Intervention();
+//    IUI.GroupTable = IUI.GroupTable ? IUI.GroupTable : [];
+//    //top.IUI.AddMainTable();
+
+//    //$.getJSON("Scripts/sample-json.json", function(data) {
+//    //    top.Study = {};
+//    //    top.Study.Data = data;
+//    //});
+
+//    //$(document).keydown(function (evt) {
+//    //    if (evt.keyCode == 73 && (evt.ctrlKey)) { //73==>I
+//    //        debugger;
+//    //        let _curRowIdx = IUI.currentTD.parent('tr').attr(TrAttr.RowIndexIntervention);
+//    //        let lstIntTr = $(Intervention.MainTableIdJQ()).find('tbody').find(`tr[${TrAttr.TRType}=${TRType.Intervention}]tr[${TrAttr.RowIndexIntervention}=${_curRowIdx}]`);
+//    //        if (lstIntTr.length > 0) {
+//    //            let lstTdAdd = $(Intervention.MainTableIdJQ()).find('tbody').find(`tr[${TrAttr.TRType}=${TRType.Intervention}]tr[${TrAttr.RowIndexIntervention}=${_curRowIdx}]`).find(`td[config='AddIntervention']`)
+//    //            if (lstTdAdd.length > 0 && lstTdAdd[0].children.length > 0) {
+//    //                let btnAdd = Ext.getCmp(lstTdAdd.eq(lstTdAdd.length - 1)[0].children[0].id);
+//    //                if (btnAdd && !btnAdd.hidden) {
+//    //                    btnAdd.fireEvent('click', btnAdd);
+//    //                }
+//    //            }
+//    //        }
+//    //    }
+//    //});
+//}
+//#endregion

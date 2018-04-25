@@ -55,161 +55,213 @@ Ext.define('MyApp.view.ExtractAddInfoField', {
     labelAlign: 'top'
 });
 
-class MyExtTextField {
-    constructor(currentTD) {  
-        //this.addInComponent = 'txtEdit';
-        this.currentTD = currentTD;
+
+//#region Override destroy
+Ext.form.BaseField.override({
+    initComponent: function () {
+        var me = this;
+        me.ignoreOverride = false; // For custom implementaion of override
+        me.callParent(arguments);
+        me.on(
+            'beforedestroy', me.onBeforeDestroy, me, //{ delay: 100 }
+        )
+    },
+    onBeforeDestroy: function (cmp, eOpts) {
+        Config.setTDValue(cmp.getValue(), cmp.getRawValue());
+        //let actTD = IUI.prevTD;
+        //if (typeof actTD === 'undefined') {
+        //    actTD = IUI.currentTD;
+        //}
+
+        //$(actTD).html(cmp.getRawValue());
+        //$(actTD).attr(TdAttr.DPVal, cmp.getValue());
     }
+});
+//#endregion
 
-    CreateComponent(cmpConfig) {
-        let me = this;
-        cmpConfig.me = me;
-        //let mi = document.createElement("input");
-        //mi.setAttribute('type', 'text');
-        //mi.setAttribute('class', 'txtFld');
-        //mi.setAttribute('autocomplete', 'off');
-        //mi.setAttribute('autofocus', 'autofocus');
-        //let me = this;
-        //Ext.destroy(Ext.getCmp('txtTextfield'));
-        //Ext.destroy(Ext.getCmp('txtDropdownfield'));
-        //let mi = new MyApp.view.ExtractTextField({
-        //    //id:'txtTextfield',
-        //    value: me.currentTD[0].innerText,
-        //});
-        ////mi.setValue(this.currentTD[0].innerText);
-        ////mi.addEventListener("blur", (e) => this.onBlur(mi, e));
-
-        ////document.getElementById(this.addInComponent).innerHTML = "";
-        ////document.getElementById(this.addInComponent).appendChild(mi); 
-        let cmpDPVal = this.currentTD.attr(TdAttr.DPVal);
-        Intervention.DestroyComponents();         
+class MyExtTextField {
+    constructor(cmpConfig) {  
+        //this.addInComponent = 'txtEdit';
+        let cmpDPVal = IUI.currentTD.attr(TdAttr.DPVal);
+        Intervention.DestroyComponents();//.then(() => {
         let mi = new MyApp.view.ExtractTextField(cmpConfig);
         mi.render(Intervention.SmartDiv());
         mi.focus();
         mi.setValue(cmpDPVal);
+        //});
     }
+
+    //CreateComponent(cmpConfig) {
+    //    let me = this;
+    //    cmpConfig.me = me;
+    //    //let mi = document.createElement("input");
+    //    //mi.setAttribute('type', 'text');
+    //    //mi.setAttribute('class', 'txtFld');
+    //    //mi.setAttribute('autocomplete', 'off');
+    //    //mi.setAttribute('autofocus', 'autofocus');
+    //    //let me = this;
+    //    //Ext.destroy(Ext.getCmp('txtTextfield'));
+    //    //Ext.destroy(Ext.getCmp('txtDropdownfield'));
+    //    //let mi = new MyApp.view.ExtractTextField({
+    //    //    //id:'txtTextfield',
+    //    //    value: me.currentTD[0].innerText,
+    //    //});
+    //    ////mi.setValue(IUI.currentTD[0].innerText);
+    //    ////mi.addEventListener("blur", (e) => this.onBlur(mi, e));
+
+    //    ////document.getElementById(this.addInComponent).innerHTML = "";
+    //    ////document.getElementById(this.addInComponent).appendChild(mi); 
+    //    let cmpDPVal = IUI.currentTD.attr(TdAttr.DPVal);
+    //    Intervention.DestroyComponents();//.then(() => {
+    //        let mi = new MyApp.view.ExtractTextField(cmpConfig);
+    //        mi.render(Intervention.SmartDiv());
+    //        mi.focus();
+    //        mi.setValue(cmpDPVal);
+    //    //});
+    //}
 };
 
 class MyExtDropdownField {    
-    constructor(currentTD) {
+    constructor(cmpConfig) {
         //this.addInComponent = 'txtEdit';
-        this.currentTD = currentTD;
+        let cmpDPVal = IUI.currentTD.attr(TdAttr.DPVal);
+        Intervention.DestroyComponents();//.then(() => {
+        let mi = new MyApp.view.ExtractDropdownField(cmpConfig);
+        mi.render(Intervention.SmartDiv());
+        mi.focus();
+        mi.setValue(cmpDPVal);
+            //});
     }
 
-    CreateComponent(cmpConfig) {
-        let me = this;
-        cmpConfig.me = me;
-        //let _store = $(this.currentTD).attr('fieldStore');
-        //if (_store) {
-            //let _strVal = JSON.parse(_store);
-            //document.getElementById(this.addInComponent).innerHTML = "";
-            //let mi = document.createElement("select");
-            //mi.setAttribute('class', 'cmpFld');
-            //mi.setAttribute('autofocus', 'autofocus');
-            //mi.addEventListener("blur", (e) => this.onBlur(mi, e));
-            //for (var i = 0; i < _strVal.length; i++) {
-            //    for (var prop in _strVal[i]) {
-            //        mi.options[i] = new Option(prop, _strVal[i][prop]);
-            //    }
-            //}
-            //mi.value = this.currentTD[0].innerText;
-            //Ext.destroy(Ext.getCmp('txtTextfield'));
-            //Ext.destroy(Ext.getCmp('txtDropdownfield'));
-            //let mi = new MyApp.view.ExtractDropdownField({
-            //    id: 'txtDropdownfield',
-            //    store: _strVal,
-            //    value: me.currentTD[0].innerText,
-            //    listeners: {
-            //        blur: function (cmp, eOpts) {
-            //            if (!Ext.isEmpty(cmp.getValue())) {
-            //                me.currentTD[0].innerHTML = cmp.getValue();
-            //            }
-            //        }
-            //    }
-            //});
-            let cmpDPVal = this.currentTD.attr(TdAttr.DPVal);
-            Intervention.DestroyComponents();            
-            let mi = new MyApp.view.ExtractDropdownField(cmpConfig);            
-            mi.render(Intervention.SmartDiv());
-            mi.focus();
-            mi.setValue(cmpDPVal);
-        //}
-    }
+    //CreateComponent(cmpConfig) {
+    //    let me = this;
+    //    cmpConfig.me = me;
+    //    //let _store = $(IUI.currentTD).attr('fieldStore');
+    //    //if (_store) {
+    //        //let _strVal = JSON.parse(_store);
+    //        //document.getElementById(this.addInComponent).innerHTML = "";
+    //        //let mi = document.createElement("select");
+    //        //mi.setAttribute('class', 'cmpFld');
+    //        //mi.setAttribute('autofocus', 'autofocus');
+    //        //mi.addEventListener("blur", (e) => this.onBlur(mi, e));
+    //        //for (var i = 0; i < _strVal.length; i++) {
+    //        //    for (var prop in _strVal[i]) {
+    //        //        mi.options[i] = new Option(prop, _strVal[i][prop]);
+    //        //    }
+    //        //}
+    //        //mi.value = IUI.currentTD[0].innerText;
+    //        //Ext.destroy(Ext.getCmp('txtTextfield'));
+    //        //Ext.destroy(Ext.getCmp('txtDropdownfield'));
+    //        //let mi = new MyApp.view.ExtractDropdownField({
+    //        //    id: 'txtDropdownfield',
+    //        //    store: _strVal,
+    //        //    value: me.currentTD[0].innerText,
+    //        //    listeners: {
+    //        //        blur: function (cmp, eOpts) {
+    //        //            if (!Ext.isEmpty(cmp.getValue())) {
+    //        //                me.currentTD[0].innerHTML = cmp.getValue();
+    //        //            }
+    //        //        }
+    //        //    }
+    //        //});
+    //        let cmpDPVal = IUI.currentTD.attr(TdAttr.DPVal);
+    //        Intervention.DestroyComponents();//.then(() => {
+    //            let mi = new MyApp.view.ExtractDropdownField(cmpConfig);
+    //            mi.render(Intervention.SmartDiv());
+    //            mi.focus();
+    //            mi.setValue(cmpDPVal);
+    //        //});
+    //    //}
+    //}
 }
 
 class MyExtButtonField {    
-    constructor(currentTD) {
+    constructor(cmpConfig) {
         //this.addInComponent = 'txtEdit';
-        this.currentTD = currentTD;
-    }
-
-    CreateComponent(cmpConfig) {
-        let me = this;
-        cmpConfig.me = me;
-        //let _store = $(this.currentTD).attr('fieldStore');
-        //if (_store) {
-        //let _strVal = JSON.parse(_store);
-        //document.getElementById(this.addInComponent).innerHTML = "";
-        //let mi = document.createElement("select");
-        //mi.setAttribute('class', 'cmpFld');
-        //mi.setAttribute('autofocus', 'autofocus');
-        //mi.addEventListener("blur", (e) => this.onBlur(mi, e));
-        //for (var i = 0; i < _strVal.length; i++) {
-        //    for (var prop in _strVal[i]) {
-        //        mi.options[i] = new Option(prop, _strVal[i][prop]);
-        //    }
-        //}
-        //mi.value = this.currentTD[0].innerText;
-        //Ext.destroy(Ext.getCmp('txtTextfield'));
-        //Ext.destroy(Ext.getCmp('txtDropdownfield'));
-        //let mi = new MyApp.view.ExtractDropdownField({
-        //    id: 'txtDropdownfield',
-        //    store: _strVal,
-        //    value: me.currentTD[0].innerText,
-        //    listeners: {
-        //        blur: function (cmp, eOpts) {
-        //            if (!Ext.isEmpty(cmp.getValue())) {
-        //                me.currentTD[0].innerHTML = cmp.getValue();
-        //            }
-        //        }
-        //    }
-        //});
-        //cnf.id = 'btnDropdownfield';
-        let cmpDPVal = this.currentTD.attr(TdAttr.DPVal);
-        Intervention.DestroyComponents();
+        let cmpDPVal = IUI.currentTD.attr(TdAttr.DPVal);
+        Intervention.DestroyComponents();//.then(() => {
         let mi = new MyApp.view.ExtractButtonField(cmpConfig);
         mi.render(Intervention.SmartDiv());
         mi.focus();
-        //mi.setText(cmpDPVal);
-        //}
+            //mi.setText(cmpDPVal);
+            //}
+        //});
     }
+
+    //CreateComponent(cmpConfig) {
+    //    let me = this;
+    //    cmpConfig.me = me;
+    //    //let _store = $(IUI.currentTD).attr('fieldStore');
+    //    //if (_store) {
+    //    //let _strVal = JSON.parse(_store);
+    //    //document.getElementById(this.addInComponent).innerHTML = "";
+    //    //let mi = document.createElement("select");
+    //    //mi.setAttribute('class', 'cmpFld');
+    //    //mi.setAttribute('autofocus', 'autofocus');
+    //    //mi.addEventListener("blur", (e) => this.onBlur(mi, e));
+    //    //for (var i = 0; i < _strVal.length; i++) {
+    //    //    for (var prop in _strVal[i]) {
+    //    //        mi.options[i] = new Option(prop, _strVal[i][prop]);
+    //    //    }
+    //    //}
+    //    //mi.value = IUI.currentTD[0].innerText;
+    //    //Ext.destroy(Ext.getCmp('txtTextfield'));
+    //    //Ext.destroy(Ext.getCmp('txtDropdownfield'));
+    //    //let mi = new MyApp.view.ExtractDropdownField({
+    //    //    id: 'txtDropdownfield',
+    //    //    store: _strVal,
+    //    //    value: me.currentTD[0].innerText,
+    //    //    listeners: {
+    //    //        blur: function (cmp, eOpts) {
+    //    //            if (!Ext.isEmpty(cmp.getValue())) {
+    //    //                me.currentTD[0].innerHTML = cmp.getValue();
+    //    //            }
+    //    //        }
+    //    //    }
+    //    //});
+    //    //cnf.id = 'btnDropdownfield';
+    //    let cmpDPVal = IUI.currentTD.attr(TdAttr.DPVal);
+    //    Intervention.DestroyComponents();//.then(() => {
+    //        let mi = new MyApp.view.ExtractButtonField(cmpConfig);
+    //        mi.render(Intervention.SmartDiv());
+    //        mi.focus();
+    //        //mi.setText(cmpDPVal);
+    //        //}
+    //    //});
+    //}
 }
 
 class MyExtActionButtonField {
-    constructor(currentTD) {
+    constructor(cell, cmpConfig) {
         //this.addInComponent = 'txtEdit';
-        this.currentTD = currentTD;
+        //IUI.currentTD = $(currentTD);
+        Intervention.DestroyComponents();//.then(() => {
+        let mi = new MyApp.view.ExtractButtonField(cmpConfig);
+        mi.render(cell);
+        mi.focus();
+        //});
     }
 
-    CreateComponent(cmpConfig) {
-        let me = this;
-        cmpConfig.me = me;        
-        Intervention.DestroyComponents();
-        let mi = new MyApp.view.ExtractButtonField(cmpConfig);
-        mi.render(this.currentTD);
-        mi.focus();
-    }
+    //CreateComponent(cmpConfig) {
+    //    let me = this;
+    //    cmpConfig.me = me;        
+    //    Intervention.DestroyComponents();//.then(() => {
+    //        let mi = new MyApp.view.ExtractButtonField(cmpConfig);
+    //        mi.render(IUI.currentTD[0]);
+    //        mi.focus();
+    //    //});
+    //}
 }
 
 //class MyExtAddInfoField {
 //    constructor(currentTD) {        
-//        this.currentTD = currentTD;
+//        IUI.currentTD = currentTD;
 //    }
 
 //    CreateComponent(cmpConfig) {
 //        let me = this;
 //        cmpConfig.me = me;        
-//        let cmpDPVal = this.currentTD.attr(TdAttr.DPVal);
+//        let cmpDPVal = IUI.currentTD.attr(TdAttr.DPVal);
 //        Intervention.DestroyComponents();
 //        let mi = new MyApp.view.ExtractAddInfoField(cmpConfig);
 //        mi.render(Intervention.SmartDiv());
@@ -217,3 +269,132 @@ class MyExtActionButtonField {
 //        mi.setValue(cmpDPVal);
 //    }
 //}
+
+
+
+
+
+
+
+
+Ext.define('MyApp.view.NewIntervention', {
+    extend: 'Ext.form.FieldSet',
+    layout: {
+        type: 'hbox',
+    },
+    //listeners: {
+    //id: 'fldSetIntervention',
+    //},
+    //padding: 10,
+    minHeight: 193,
+    height: 700,
+    autoScroll: true,
+    overflowX: 'scroll',
+    name: 'newInterventionTabFieldSet',
+    grpId: "",
+    grpName: "Total Population",
+    //tbl: "",
+    //isetCases:[],
+    initComponent: function () {
+        var me = this;
+        Ext.applyIf(me, {
+            items: [
+                {
+                    xtype: "displayfield",
+                    value: me.grpName,
+                    //layout: {
+                    //    type: 'vbox',
+                    //    align: 'center'
+                    //},
+                    width: 150,
+                    height: 698,
+                    //margins: "0 5 0 0",
+                    style: "border-right: 1px solid #b5b8c8;",
+                },
+                {
+                    xtype: 'container',
+                    name: 'mainInterventionParent',
+                    autoScroll: true,
+                    overflowX: 'scroll',
+                    //width: 1500,
+                    //layout:'vbox',
+                    //html: me.tbl,
+                    //isetCases: me.isetCases,
+                    height: 698,
+                    listeners: {
+                        afterrender: (cmp, eOpts) => {
+                            
+                            //let cmpWid = cmp.getWidth();
+                            cmp.setWidth(cmp.findParentByType('fieldset').getWidth() - 172);
+                        }
+                    }
+                    //    beforerender: (cmp, e) => {
+                    //        let cases = [];
+                    //        let isetCases = [];
+                    //        let _grpId = cmp.up().grpId;
+                    //        let grp = Extract.Helper.getEntity(Extract.EntityTypes.Groups, _grpId);
+                    //        let iSets = Extract.Helper.getEntityListByArrayId(grp.InterventionSets, Extract.EntityTypes.InterventionSets);
+                    //        for (let j = 0; j < iSets.length; j++) {
+                    //            let InterventionSet = iSets[j];
+                    //            //let _tbl = me.createTable(InterventionSet.id);
+                    //            if (InterventionSet.caseNo != null && InterventionSet.isDeleted != true) {
+                    //                let _curCase = InterventionSet.caseNo.sort().join();
+                    //                if (cases.indexOf(_curCase) == -1) {
+                    //                    cases.push(_curCase);
+                    //                    let obj = {};
+                    //                    obj["isetId"] = [];
+                    //                    obj["case"] = _curCase;
+                    //                    obj["isetId"].push(InterventionSet.id);
+                    //                    isetCases.push(obj);
+                    //                } else {
+                    //                    let _Case = isetCases.filter(a => { return a.case == _curCase });
+                    //                    if (_Case.length > 0) {
+                    //                        _Case[0]["isetId"].push(InterventionSet.id);
+                    //                    }
+                    //                }
+                    //            }
+                    //        }
+
+                    //        debugger
+
+                    //        let _tblhtml = "";                            
+                    //        for (var i = 0; i < isetCases.length; i++) {
+                    //            let tableId = `${IdPrefix.Group}${_grpId}-${i + 1}`;                                
+                    //            _tblhtml += Intervention.createTable(tableId, isetCases[i].isetId.join(), Cases.CaseNameByCaseNo[isetCases[i].case]);  
+                    //            cmp.tableId = tableId;
+                    //            cmp.strCase = Cases.CaseNameByCaseNo[isetCases[i].case];
+                    //        }
+                    //        cmp.html = _tblhtml;
+                            
+                    //    },
+                    //    afterrender: (cmp, e) => {
+                    //        debugger
+                    //        //for (var i = 0; i < cmp.isetCases.length; i++) {
+                    //        //    _tblhtml += Intervention.createTable(cmp.isetCases[i].isetId[0], cmp.isetCases[i].case);
+                    //        //}
+                    //        //cmp.html = _tblhtml;
+                    //        new Drug(cmp.strCase).setDrug(cmp.tableId);
+                    //    }
+                    //}
+                }
+            ]
+        });
+
+        me.callParent(arguments);
+    }    
+});
+
+
+//Ext.define('MyApp.view.NewInterventionTable', {
+//    extend: 'Ext.form.FieldSet',
+//    html: '<table id="${grpId}" class="tblCls" ><tbody></tbody></table> ',
+//    width: 300,
+//    height: 200,
+//    padding: 20,    
+//    initComponent: function () {
+//        var me = this;
+//        Ext.applyIf(me, {
+
+//        });
+//    }
+//});

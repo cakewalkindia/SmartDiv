@@ -88,6 +88,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Readme\Ext.NET\Sample.Web.config" />
+    <Content Include="EXT\ExtractDB\Analytics\ExtractCreate.js" />
+    <Content Include="EXT\ExtractDB\Core\ExtractCore.js" />
+    <Content Include="EXT\ExtractDB\FirebaseJS\firebase.js" />
+    <Content Include="EXT\ExtractDB\Helper\ExtractHelper.js" />
     <Content Include="EXT\Scripts\sample-json.json" />
     <None Include="packages.config" />
     <None Include="Web.Debug.config">
@@ -119,6 +123,7 @@
     <Content Include="EXT\Scripts\jquery-3.3.1.min.js" />
     <Content Include="EXT\Scripts\reference.js" />
     <Content Include="EXT\Scripts\main.js" />
+    <Content Include="EXT\Scripts\Utils.js" />
     <Content Include="Global.asax" />
     <Content Include="HTML\FloatLabel.html" />
     <Content Include="HTML\HTML.html" />

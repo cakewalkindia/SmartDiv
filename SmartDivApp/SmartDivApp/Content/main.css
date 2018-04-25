@@ -5,13 +5,20 @@
 
 .tblCls {
     border-collapse: collapse;
-    width: 100%;
-    margin-bottom: 15px;
+    /*width: 100%;
+    margin-bottom: 15px;*/
+    margin-top: -1px;
+    margin-left: -1px;
+}
+
+.tdColSpan {
+    /*border: 1px solid #bfbfbf;*/
+    background-color: #ececec;
 }
 
 .tdCls {
-    width: 150px;
-    min-width: 150px;
+    width: 167px;
+    min-width: 167px;
     border: 1px solid #bfbfbf;
     text-align: center;
     padding: 8px;
@@ -24,7 +31,7 @@
     min-width: 30px;
     /*border: 1px solid black;*/
     text-align: center;
-    background-color: #eae7e7;
+    /*background-color: #eae7e7;*/
 }
 
 .thCls {
@@ -61,10 +68,11 @@
     margin: -1px 0px 0px 2px;
 }*/
 .divFld {
-    width: 167px !important;
-    height: 33px;
+    /*width: 167px !important;*/
+    height: 30px;
     position: absolute;
     text-align: center;
+    background-color: white;
 }
 
 input[type=text], textarea, select {
