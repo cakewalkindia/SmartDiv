@@ -5,8 +5,9 @@ Ext.define('MyApp.view.ExtractTextField', {
     //matchFieldWidth: false,
     labelAlign: 'top',
     alias: ['widget.ExtractText'],
-    width: 167,
-    height: 33,
+    width: 166,
+    height: 30,
+    border: false,
     //queryMode: 'local',
     //tpl: '<tpl for="."><div class="x-boundlist-item cmbtplborder">{field1} </div></tpl>',
     //displayTpl: '<tpl for=".">{field1}</tpl>',            
@@ -26,8 +27,9 @@ Ext.define('MyApp.view.ExtractDropdownField', {
     //matchFieldWidth: false,
     labelAlign:'top',
     alias: ['widget.ExtractDropdown'],
-    width: 167,
-    height: 30,
+    width: 166,
+    height: 28,
+    border: false,
     //queryMode: 'local',
     tpl: '<tpl for="."><div class="x-boundlist-item cmbtplborder">{field1} </div></tpl>',
     displayTpl: '<tpl for=".">{field1}</tpl>',
@@ -48,12 +50,6 @@ Ext.define('MyApp.view.ExtractButtonField', {
     cls: "txtFld",
     labelAlign: 'top',
 });
-Ext.define('MyApp.view.ExtractAddInfoField', {
-    extend: 'Ext.form.TextArea',
-    alias: ['widget.ExtractAddInfo'],
-    cls: "txtFld",
-    labelAlign: 'top'
-});
 
 
 //#region Override destroy
@@ -67,7 +63,8 @@ Ext.form.BaseField.override({
         )
     },
     onBeforeDestroy: function (cmp, eOpts) {
-        Config.setTDValue(cmp.getValue(), cmp.getRawValue());
+        //let cell = $(cmp.el.dom).parent('td');
+        IUI.SetTDValue(cmp.getValue(), cmp.getRawValue());
         //let actTD = IUI.prevTD;
         //if (typeof actTD === 'undefined') {
         //    actTD = IUI.currentTD;
@@ -80,14 +77,19 @@ Ext.form.BaseField.override({
 //#endregion
 
 class MyExtTextField {
-    constructor(cmpConfig) {  
+    constructor(cmp) {  
         //this.addInComponent = 'txtEdit';
-        let cmpDPVal = IUI.currentTD.attr(TdAttr.DPVal);
+        let cmpDPId = IUI.currentTD.attr(TdAttr.DPId);
+        //let cmpDPVal = IUI.currentTD.attr(TdAttr.DPVal);
         Intervention.DestroyComponents();//.then(() => {
-        let mi = new MyApp.view.ExtractTextField(cmpConfig);
+        let mi = new MyApp.view.ExtractTextField(cmp['config']);
         mi.render(Intervention.SmartDiv());
         mi.focus();
-        mi.setValue(cmpDPVal);
+        if (cmpDPId) {
+            let dp = Extract.Data.Datapoints[cmpDPId];
+            let dpVal = dp[cmp['dpFieldtoUpdate']];
+            mi.setValue(dpVal);
+        }        
         //});
     }
 
@@ -122,14 +124,20 @@ class MyExtTextField {
 };
 
 class MyExtDropdownField {    
-    constructor(cmpConfig) {
+    constructor(cmp) {
         //this.addInComponent = 'txtEdit';
-        let cmpDPVal = IUI.currentTD.attr(TdAttr.DPVal);
+        let cmpDPId = IUI.currentTD.attr(TdAttr.DPId);
+
+        //let cmpDPVal = IUI.currentTD.attr(TdAttr.DPVal);
         Intervention.DestroyComponents();//.then(() => {
-        let mi = new MyApp.view.ExtractDropdownField(cmpConfig);
+        let mi = new MyApp.view.ExtractDropdownField(cmp['config']);
         mi.render(Intervention.SmartDiv());
         mi.focus();
-        mi.setValue(cmpDPVal);
+        if (cmpDPId) {
+            let dp = Extract.Data.Datapoints[cmpDPId];
+            let dpVal = dp[cmp['dpFieldtoUpdate']];
+            mi.setValue(dpVal);
+        }
             //});
     }
 
@@ -176,12 +184,13 @@ class MyExtDropdownField {
 }
 
 class MyExtButtonField {    
-    constructor(cmpConfig) {
+    constructor(cmp) {
         //this.addInComponent = 'txtEdit';
-        let cmpDPVal = IUI.currentTD.attr(TdAttr.DPVal);
+        //let cmpDPVal = IUI.currentTD.attr(TdAttr.DPVal);
         Intervention.DestroyComponents();//.then(() => {
-        let mi = new MyApp.view.ExtractButtonField(cmpConfig);
+        let mi = new MyApp.view.ExtractButtonField(cmp['config']);
         mi.render(Intervention.SmartDiv());
+        //mi.render(cell);
         mi.focus();
             //mi.setText(cmpDPVal);
             //}
@@ -309,7 +318,7 @@ Ext.define('MyApp.view.NewIntervention', {
                     width: 150,
                     height: 698,
                     //margins: "0 5 0 0",
-                    style: "border-right: 1px solid #b5b8c8;",
+                    style: "border-right: 1px solid #bfbfbf;",
                 },
                 {
                     xtype: 'container',

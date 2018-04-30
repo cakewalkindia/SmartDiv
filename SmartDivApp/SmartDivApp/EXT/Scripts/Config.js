@@ -4,23 +4,26 @@ let ColumnIdx = 1;
 
 const ComponentList = {
     TreatmentTag: {
-        type: 'Intervention',
+        //type: 'Intervention',
         compType: ComponentType.ExtractButton,
         name: "TreatmentTag",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Backbone Intervention",
-        cellText: "B",
+        //dpValue: "Backbone Intervention",
+        //cellText: "B",
         dpSourceType: Extract.EntityTypes.InterventionSets,
         dpSource: Extract.Groups.SOURCENAMES.OTHERS,
         dpName: 'Treatment Tag',
         dpFieldtoUpdate: "Value",
         config: {
+            width: 25,
+            height: 25,
+            //margin: "2 0 0 0",
             //fieldLabel: 'Treatment Tag',                
             tooltip: "Treatment Tag",
             //lblTag: 'TreatmentTag',
             cls: 'btn-treatment-tag btnFld',
-            //dpVal : "Backbone Intervention",
+            //dpVal : "Backbone Intervention",            
             listeners: {
                 click: (btn, eOpts) => {
                     //if (cmp.getText() == "I") {
@@ -34,35 +37,35 @@ const ComponentList = {
                         //Extract.Helper.setEntity(Extract.EntityTypes.Datapoints, btn.enty.id, { Value: 'Intervention' });
                         dp.Value = "Intervention";
                         btn.setText("I");
-                        IUI.currentTD.text("Intervention");
+                        //IUI.currentTD.text("Intervention");
                         //btn.removeCls("btn-treatment-tag-i");
                         //btn.addCls("btn-treatment-tag-i");
                     } else if (dp.Value == "Intervention") {
                         //Extract.Helper.setEntity(Extract.EntityTypes.Datapoints, btn.enty.id, { Value: 'Control' });
                         dp.Value = "Control";
                         btn.setText("C");
-                        IUI.currentTD.text("Control");
+                        //IUI.currentTD.text("Control");
                         btn.removeCls("btn-treatment-tag-i");
                         btn.addCls("btn-treatment-tag-c");
                     } else if (dp.Value == "Control") {
                         //Extract.Helper.setEntity(Extract.EntityTypes.Datapoints, btn.enty.id, { Value: 'Rescue Intervention' });
                         dp.Value = "Rescue Intervention";
                         btn.setText("R");
-                        IUI.currentTD.text("Rescue Intervention");
+                        //IUI.currentTD.text("Rescue Intervention");
                         btn.removeCls("btn-treatment-tag-c");
                         btn.addCls("btn-treatment-tag-r");
                     } else if (dp.Value == "Rescue Intervention") {
                         //Extract.Helper.setEntity(Extract.EntityTypes.Datapoints, btn.enty.id, { Value: 'Backbone Intervention' });
                         dp.Value = "Backbone Intervention";
                         btn.setText("B");
-                        IUI.currentTD.text("Backbone Intervention");
+                        //IUI.currentTD.text("Backbone Intervention");
                         btn.removeCls("btn-treatment-tag-r");
                         btn.addCls("btn-treatment-tag-b");
                     } else if (dp.Value == "Backbone Intervention") {
                         //Extract.Helper.setEntity(Extract.EntityTypes.Datapoints, btn.enty.id, { Value: 'Treatment Tag' });
                         dp.Value = "Treatment Tag";
                         btn.setText(" ");
-                        IUI.currentTD.text("Treatment Tag");
+                        //IUI.currentTD.text("Treatment Tag");
                         btn.removeCls("btn-treatment-tag-b");
                         btn.addCls("btn-treatment-tag-i");
                     }
@@ -74,6 +77,8 @@ const ComponentList = {
                         $(btn.btnInnerEl.dom).addClass("btn-treatment-tag-color-w");
                         $(btn.btnInnerEl.dom).removeClass("btn-treatment-tag-color-b");
                     }
+
+                    ComponentList.TreatmentTag.elmTD(IUI.currentTD[0], dp.Value);
                     ////btn.dpVal = dp.Value;
                     //Config.setTDValue(dp.Value, btn.getText());
                     ////btn.resumeLayouts();
@@ -85,6 +90,7 @@ const ComponentList = {
                 //},
                 afterrender: (btn, e) => {
                     let dp = Extract.Data.Datapoints[IUI.currentTD.attr(TdAttr.DPId)];
+                    //let dp = Extract.Data.Datapoints[$(btn.el.dom).parent('td').attr(TdAttr.DPId)];
                     //dp.Value = IUI.currentTD.attr(TdAttr.DPVal); 
                     if (Ext.isEmpty(dp.Value)) {
                         Extract.Helper.setEntity(Extract.EntityTypes.Datapoints, dp.id, { Value: 'Treatment Tag' });
@@ -141,16 +147,50 @@ const ComponentList = {
                     }
                 }
             }
+        },
+        elmTD: (cell, dpVal) => {
+            //<a href="#" class="myButton">R</a>
+            cell.innerHTML = "";
+            cell.setAttribute(TdAttr.Title, dpVal);
+            let el = document.createElement('a');
+            el.setAttribute("href", "#");
+
+            switch (dpVal) {
+                case "Treatment Tag":   
+                    el.setAttribute("class", "treatmenttag btn-treatment-tag-i btn-treatment-tag-color-w");
+                    el.innerText = " ";
+                    break;
+
+                case "Intervention":
+                    el.setAttribute("class", "treatmenttag btn-treatment-tag-i btn-treatment-tag-color-w");
+                    el.innerText = "I";
+                    break;
+                case "Control":
+                    el.setAttribute("class", "treatmenttag btn-treatment-tag-c btn-treatment-tag-color-b");
+                    el.innerText = "C";
+                    break;
+                case "Rescue Intervention":
+                    el.setAttribute("class", "treatmenttag btn-treatment-tag-r btn-treatment-tag-color-w");
+                    el.innerText = "R";
+                    break;
+                case "Backbone Intervention":
+                    el.setAttribute("class", "treatmenttag btn-treatment-tag-b btn-treatment-tag-color-w");
+                    el.innerText = "B";
+                    break;
+                default:
+            }
+
+            cell.appendChild(el);
         }
     },
     FixedDose: {
-        type: 'Intervention',
+        //type: 'Intervention',
         compType: ComponentType.ExtractDropdown,
         name: "FixedDose",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
         dpDefaultValue: "No",
-        cellText: "(None)",
+        cellText: "Fixed Dose",
         dpSourceType: Extract.EntityTypes.InterventionSets,
         dpSource: Extract.Groups.SOURCENAMES.FIXED_DOSE_COMBINATION,
         dpName: "Fixed Dose",
@@ -193,14 +233,14 @@ const ComponentList = {
                 }
             }
         },
-        getTDDispValue: (dpVal) => {
+        displayValueTD: (dpVal) => {
             let dt = [['No', '(None)'], ['Yes', 'Fixed']];
             let val = dt.filter(a => { return a[0] == dpVal });
             if (val) {
                 return val[0][1];
             }
             return dpVal;
-        }
+        },        
     },
     Intervention: {
         type: 'Intervention',
@@ -208,8 +248,8 @@ const ComponentList = {
         name: "Intervention",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Intervention A",
-        cellText: "Intervention A",
+        //dpValue: "Intervention A",
+        cellText: "Intervention Name",
         dpSourceType: Extract.EntityTypes.InterventionSets,
         dpSource: Extract.Groups.SOURCENAMES.OTHERS,
         dpName: 'Intervention Name',
@@ -234,8 +274,8 @@ const ComponentList = {
         name: "FixedDoseCombinationName",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "FDC Name",
-        cellText: "FDC Name",
+        //dpValue: "FDC Name",
+        cellText: "Fixed Dose Combination Name",
         dpSourceType: Extract.EntityTypes.InterventionSets,
         dpSource: Extract.Groups.SOURCENAMES.FIXED_DOSE_COMBINATION,
         dpName: 'Fixed Dose Combination Name',
@@ -259,7 +299,7 @@ const ComponentList = {
         name: "Manufacturer",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Manufacturer",
+        //dpValue: "Manufacturer",
         cellText: "Manufacturer",
         dpSourceType: Extract.EntityTypes.InterventionSets,
         dpSource: Extract.Groups.SOURCENAMES.OTHERS,
@@ -283,7 +323,7 @@ const ComponentList = {
         name: "Brand",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Brand",
+        //dpValue: "Brand",
         cellText: "Brand",
         dpSourceType: Extract.EntityTypes.InterventionSets,
         dpSource: Extract.Groups.SOURCENAMES.OTHERS,
@@ -308,7 +348,7 @@ const ComponentList = {
         name: "Medium",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Medium",
+        //dpValue: "Medium",
         cellText: "Medium",
         dpSourceType: Extract.EntityTypes.InterventionSets,
         dpSource: Extract.Groups.SOURCENAMES.OTHERS,
@@ -333,7 +373,7 @@ const ComponentList = {
         name: "MediumTitle",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Title",
+        //dpValue: "Title",
         cellText: "Title",
         dpSourceType: Extract.EntityTypes.InterventionSets,
         dpSource: Extract.Groups.SOURCENAMES.OTHERS,
@@ -357,7 +397,7 @@ const ComponentList = {
         name: "MediumPublisher",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Publisher",
+        //dpValue: "Publisher",
         cellText: "Publisher",
         dpSourceType: Extract.EntityTypes.InterventionSets,
         dpSource: Extract.Groups.SOURCENAMES.OTHERS,
@@ -381,7 +421,7 @@ const ComponentList = {
         name: "MediumPublishYear",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Publish Year",
+        //dpValue: "Publish Year",
         cellText: "Publish Year",
         dpSourceType: Extract.EntityTypes.InterventionSets,
         dpSource: Extract.Groups.SOURCENAMES.OTHERS,
@@ -405,7 +445,7 @@ const ComponentList = {
         name: "MediumEdition",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Edition",
+        //dpValue: "Edition",
         cellText: "Edition",
         dpSourceType: Extract.EntityTypes.InterventionSets,
         dpSource: Extract.Groups.SOURCENAMES.OTHERS,
@@ -429,7 +469,7 @@ const ComponentList = {
         name: "MediumLength",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Length",
+        //dpValue: "Length",
         cellText: "Length",
         dpSourceType: Extract.EntityTypes.InterventionSets,
         dpSource: Extract.Groups.SOURCENAMES.OTHERS,
@@ -453,7 +493,7 @@ const ComponentList = {
         name: "MediumUnit",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Unit",
+        //dpValue: "Unit",
         cellText: "Unit",
         dpSourceType: Extract.EntityTypes.InterventionSets,
         dpSource: Extract.Groups.SOURCENAMES.OTHERS,
@@ -481,7 +521,7 @@ const ComponentList = {
         name: "MediumLanguage",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Language",
+        //dpValue: "Language",
         cellText: "Language",
         dpSourceType: Extract.EntityTypes.InterventionSets,
         dpSource: Extract.Groups.SOURCENAMES.OTHERS,
@@ -505,7 +545,7 @@ const ComponentList = {
         name: "MediumAudience",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Audience",
+        //dpValue: "Audience",
         cellText: "Audience",
         dpSourceType: Extract.EntityTypes.InterventionSets,
         dpSource: Extract.Groups.SOURCENAMES.OTHERS,
@@ -529,7 +569,7 @@ const ComponentList = {
         name: "MediumProvider",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Provider",
+        //dpValue: "Provider",
         cellText: "Provider",
         dpSourceType: Extract.EntityTypes.InterventionSets,
         dpSource: Extract.Groups.SOURCENAMES.OTHERS,
@@ -557,7 +597,7 @@ const ComponentList = {
         name: "ManualizedTreatment",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Manualized Treatment",
+        //dpValue: "Manualized Treatment",
         cellText: "Manualized Treatment",
         dpSourceType: Extract.EntityTypes.InterventionSets,
         dpSource: Extract.Groups.SOURCENAMES.OTHERS,
@@ -582,7 +622,7 @@ const ComponentList = {
         name: "OtherTreatmentName",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Other Treatment Name",
+        //dpValue: "Other Treatment Name",
         cellText: "Other Treatment Name",
         dpSourceType: Extract.EntityTypes.InterventionSets,
         dpSource: Extract.Groups.SOURCENAMES.OTHERS,
@@ -606,7 +646,7 @@ const ComponentList = {
         name: "ManualInfo",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Manual Info",
+        //dpValue: "Manual Info",
         cellText: "Manual Info",
         dpSourceType: Extract.EntityTypes.InterventionSets,
         dpSource: Extract.Groups.SOURCENAMES.OTHERS,
@@ -870,7 +910,9 @@ const ComponentList = {
                         //IUI.SmartDivPosition();
                         //window.setTimeout(() => {
                         //    IUI.CreateComponent();
-                        //}, 250);                        
+                        //}, 250);
+                        IUI.SetTDAfterDelete(obj[CurrentTableObject.TableId]);
+
                     }).catch(() => {
                         //console.log("Promise Rejected");
                     });
@@ -965,7 +1007,7 @@ const ComponentList = {
         name: "FixedDoseIntervention",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Intervention A1",
+        //dpValue: "Intervention A1",
         cellText: "Intervention A1",
         dpSourceType: Extract.EntityTypes.InterventionSets,
         dpSource: Extract.Groups.SOURCENAMES.FIXED_DOSE_COMBINATION,
@@ -981,8 +1023,8 @@ const ComponentList = {
         name: "FixedDoseConcentration",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "FDC",
-        cellText: "FDC",
+        //dpValue: "FDC",
+        cellText: "Fixed Dose Concentration",
         dpSourceType: Extract.EntityTypes.InterventionSets,
         dpSource: Extract.Groups.SOURCENAMES.FIXED_DOSE_COMBINATION,
         dpName: 'Fixed Dose Concentration',
@@ -997,8 +1039,8 @@ const ComponentList = {
         name: "FixedDoseUnit",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "FDU",
-        cellText: "FDU",
+        //dpValue: "FDU",
+        cellText: "Fixed Dose Unit",
         dpSourceType: Extract.EntityTypes.InterventionSets,
         dpSource: Extract.Groups.SOURCENAMES.FIXED_DOSE_COMBINATION,
         dpName: 'Fixed Dose Unit',
@@ -1110,7 +1152,7 @@ const ComponentList = {
                                 _drg.DeleteFixedDose(intSetId, _rowIdxFd);
                             }
 
-
+                            IUI.SetTDAfterDelete(obj[CurrentTableObject.TableId]);
 
 
                         }).catch(() => {
@@ -1163,11 +1205,11 @@ const ComponentList = {
         name: "StudyPhase",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Treatment Period",
-        cellText: "Treatment Period",
+        //dpValue: "Treatment Period",
+        cellText: "Study Phase",
         dpSourceType: Extract.EntityTypes.Interventions,
         dpSource: "", // Intervention level - phaseId update           
-        dpName: 'Study Phase',
+        //dpName: 'Study Phase',
         dpFieldtoUpdate: "phaseid",
         config: {
             //valueField: 'id',
@@ -1185,8 +1227,8 @@ const ComponentList = {
         name: "Schedule",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Afternoon",
-        cellText: "Afternoon",
+        //dpValue: "Afternoon",
+        cellText: "Schedule",
         dpSourceType: Extract.EntityTypes.Interventions,
         dpSource: Extract.Groups.SOURCENAMES.OTHERS,
         dpName: 'Schedule',
@@ -1202,8 +1244,8 @@ const ComponentList = {
         name: "Route",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Extraocular",
-        cellText: "Extraocular",
+        //dpValue: "Extraocular",
+        cellText: "Route",
         dpSourceType: Extract.EntityTypes.Interventions,
         dpSource: Extract.Groups.SOURCENAMES.OTHERS,
         dpName: 'Route',
@@ -1219,8 +1261,8 @@ const ComponentList = {
         name: "Provider",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Clinician",
-        cellText: "Clinician",
+        //dpValue: "Clinician",
+        cellText: "Provider",
         dpSourceType: Extract.EntityTypes.Interventions,
         dpSource: Extract.Groups.SOURCENAMES.OTHERS,
         dpName: 'Provider',
@@ -1236,7 +1278,7 @@ const ComponentList = {
         name: "LineOfTreatment",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Line of Treatment",
+        //dpValue: "Line of Treatment",
         cellText: "Line of Treatment",
         dpSourceType: Extract.EntityTypes.Interventions,
         dpSource: Extract.Groups.SOURCENAMES.OTHERS,
@@ -1252,8 +1294,8 @@ const ComponentList = {
         name: "StageSetting",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Stage Setting",
-        cellText: "Stage Setting",
+        //dpValue: "Stage Setting",
+        cellText: "Stage / Setting",
         dpSourceType: Extract.EntityTypes.Interventions,
         dpSource: Extract.Groups.SOURCENAMES.OTHERS,
         dpName: 'Stage / Setting',
@@ -1270,7 +1312,7 @@ const ComponentList = {
         name: "MiscName",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Name",
+        //dpValue: "Name",
         cellText: "Name",
         dpSourceType: Extract.EntityTypes.Interventions,
         dpSource: Extract.Groups.SOURCENAMES.MISC,
@@ -1294,7 +1336,7 @@ const ComponentList = {
         name: "MiscDesc",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Desc",
+        //dpValue: "Desc",
         cellText: "Desc",
         dpSourceType: Extract.EntityTypes.Interventions,
         dpSource: Extract.Groups.SOURCENAMES.MISC,
@@ -1519,6 +1561,8 @@ const ComponentList = {
                         //window.setTimeout(() => {
                         //    IUI.CreateComponent();
                         //}, 250);
+
+                        IUI.SetTDAfterDelete(obj[CurrentTableObject.TableId]);
                     }).catch(() => {
                         //console.log("Promise Rejected");
                     });
@@ -1606,7 +1650,7 @@ const ComponentList = {
         name: "DrugRequiredDrugs",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Required Drugs",
+        //dpValue: "Required Drugs",
         cellText: "Required Drugs",
         dpSourceType: Extract.EntityTypes.Interventions,
         dpSource: Extract.Groups.SOURCENAMES.OTHERS,
@@ -1630,7 +1674,7 @@ const ComponentList = {
         name: "DrugTechnique",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Technique",
+        //dpValue: "Technique",
         cellText: "Technique",
         dpSourceType: Extract.EntityTypes.Interventions,
         dpSource: Extract.Groups.SOURCENAMES.OTHERS,
@@ -1654,7 +1698,7 @@ const ComponentList = {
         name: "DrugNotes",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Notes",
+        //dpValue: "Notes",
         cellText: "Notes",
         dpSourceType: Extract.EntityTypes.Interventions,
         dpSource: Extract.Groups.SOURCENAMES.OTHERS,
@@ -1678,7 +1722,7 @@ const ComponentList = {
         name: "DrugSurgeonsExpertiseLevel",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Surgeons Expertise Level",
+        //dpValue: "Surgeons Expertise Level",
         cellText: "Surgeons Expertise Level",
         dpSourceType: Extract.EntityTypes.Interventions,
         dpSource: Extract.Groups.SOURCENAMES.OTHERS,
@@ -1702,7 +1746,7 @@ const ComponentList = {
         name: "DrugRouteofEntry",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Route of Entry",
+        //dpValue: "Route of Entry",
         cellText: "Route of Entry",
         dpSourceType: Extract.EntityTypes.Interventions,
         dpSource: Extract.Groups.SOURCENAMES.OTHERS,
@@ -1726,7 +1770,7 @@ const ComponentList = {
         name: "DrugAnesthesia",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Anesthesia",
+        //dpValue: "Anesthesia",
         cellText: "Anesthesia",
         dpSourceType: Extract.EntityTypes.Interventions,
         dpSource: Extract.Groups.SOURCENAMES.OTHERS,
@@ -1751,7 +1795,7 @@ const ComponentList = {
         name: "DrugAnesthesiaDosage",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Anesthesia Dosage",
+        //dpValue: "Anesthesia Dosage",
         cellText: "Anesthesia Dosage",
         dpSourceType: Extract.EntityTypes.Interventions,
         dpSource: Extract.Groups.SOURCENAMES.OTHERS,
@@ -1775,7 +1819,7 @@ const ComponentList = {
         name: "DrugAnesthesiaDosageUnit",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Anesthesia Dosage Unit",
+        //dpValue: "Anesthesia Dosage Unit",
         cellText: "Anesthesia Dosage Unit",
         dpSourceType: Extract.EntityTypes.Interventions,
         dpSource: Extract.Groups.SOURCENAMES.OTHERS,
@@ -1985,6 +2029,8 @@ const ComponentList = {
                         ////window.setTimeout(() => {
                         ////    IUI.CreateComponent();
                         ////}, 250);
+
+                        IUI.SetTDAfterDelete(obj[CurrentTableObject.TableId]);
                     }).catch(() => {
                         //console.log("Promise Rejected");
                     });
@@ -2064,7 +2110,7 @@ const ComponentList = {
         name: "Protocol",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Protocol",
+        //dpValue: "Protocol",
         cellText: "Protocol",
         dpSourceType: Extract.EntityTypes.Interventions,
         dpSource: Extract.Groups.SOURCENAMES.DOSAGE,
@@ -2094,8 +2140,8 @@ const ComponentList = {
         name: "DosageType",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Basal",
-        cellText: "Basal",
+        //dpValue: "Basal",
+        cellText: "Dosage Type",
         dpSourceType: Extract.EntityTypes.Interventions,
         dpSource: Extract.Groups.SOURCENAMES.DOSAGE,
         dpName: 'Dosage Type',
@@ -2111,7 +2157,7 @@ const ComponentList = {
         name: "FieldType",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Dosage Field Type",
+        //dpValue: "Dosage Field Type",
         cellText: "Dosage Field Type",
         dpSourceType: Extract.EntityTypes.Interventions,
         dpSource: Extract.Groups.SOURCENAMES.DOSAGE,
@@ -2128,7 +2174,7 @@ const ComponentList = {
         name: "FieldValue",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Dosage Field Value",
+        //dpValue: "Dosage Field Value",
         cellText: "Dosage Field Value",
         dpSourceType: Extract.EntityTypes.Interventions,
         dpSource: Extract.Groups.SOURCENAMES.DOSAGE,
@@ -2145,7 +2191,7 @@ const ComponentList = {
         name: "DosageUnit",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "CFU",
+        //dpValue: "CFU",
         cellText: "CFU",
         dpSourceType: Extract.EntityTypes.Interventions,
         dpSource: Extract.Groups.SOURCENAMES.DOSAGE,
@@ -2162,7 +2208,7 @@ const ComponentList = {
         name: "Concentration",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Concentration",
+        //dpValue: "Concentration",
         cellText: "Concentration",
         dpSourceType: Extract.EntityTypes.Interventions,
         dpSource: Extract.Groups.SOURCENAMES.DOSAGE,
@@ -2179,8 +2225,8 @@ const ComponentList = {
         name: "ConcentrationUnit",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "%",
-        cellText: "%",
+        //dpValue: "%",
+        cellText: "Concentration Unit",
         dpSourceType: Extract.EntityTypes.Interventions,
         dpSource: Extract.Groups.SOURCENAMES.DOSAGE,
         dpName: 'Concentration Unit',
@@ -2196,11 +2242,11 @@ const ComponentList = {
         name: "Frequency",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Frequency",
+        //dpValue: "Frequency",
         cellText: "Frequency",
         dpSourceType: Extract.EntityTypes.Interventions,
         dpSource: Extract.Groups.SOURCENAMES.FREQUENCY,
-        dpName: 'Dosage Frequency',
+        //dpName: 'Dosage Frequency',
         dpFieldtoUpdate: "Value",
         config: {
             //fieldLabel: 'Frequency',
@@ -2213,11 +2259,11 @@ const ComponentList = {
         name: "FrequencyUnit",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "d",
-        cellText: "week",
+        //dpValue: "d",
+        cellText: "Frequency Unit",
         dpSourceType: Extract.EntityTypes.Interventions,
         dpSource: Extract.Groups.SOURCENAMES.FREQUENCY,
-        dpName: 'Frequency Unit',
+        //dpName: 'Frequency Unit',
         dpFieldtoUpdate: "Name",
         config: {
             valueField: 'id',
@@ -2258,8 +2304,8 @@ const ComponentList = {
         name: "FrequencyInfo",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Frequency Info",
-        cellText: "Frequency Info",
+        //dpValue: "Frequency Info",
+        cellText: "Frequency Information",
         dpSourceType: Extract.EntityTypes.Interventions,
         dpSource: Extract.Groups.SOURCENAMES.FREQUENCY,
         dpName: 'Frequency Information',
@@ -2275,7 +2321,7 @@ const ComponentList = {
         name: "Duration",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Duration Value",
+        //dpValue: "Duration Value",
         cellText: "Duration Value",
         dpSourceType: Extract.EntityTypes.Interventions,
         dpSource: Extract.Groups.SOURCENAMES.DOSAGE,
@@ -2292,7 +2338,7 @@ const ComponentList = {
     //    name: "Duration",
     //    cssClass: "tdCls",
     //    columnIndex: ColumnIdx++,
-    //    dpValue: "Time",
+    //    ////dpValue: "Time",
     //    cellText: "Time",
     //    config: {
     //        //fieldLabel: 'Duration',
@@ -2313,7 +2359,7 @@ const ComponentList = {
         name: "DurationUnit",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Duration Unit",
+        //dpValue: "Duration Unit",
         cellText: "Duration Unit",
         dpSourceType: Extract.EntityTypes.Interventions,
         dpSource: Extract.Groups.SOURCENAMES.DOSAGE,
@@ -2348,8 +2394,8 @@ const ComponentList = {
         name: "DurationInfo",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Duration Info",
-        cellText: "Duration Info",
+        //dpValue: "Duration Info",
+        cellText: "Duration Information",
         dpSourceType: Extract.EntityTypes.Interventions,
         dpSource: Extract.Groups.SOURCENAMES.DOSAGE,
         dpName: 'Timepoint Information',
@@ -2365,11 +2411,11 @@ const ComponentList = {
         name: "TimepointUnit",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Timepoint Unit",
+        //dpValue: "Timepoint Unit",
         cellText: "Timepoint Unit",
         dpSourceType: Extract.EntityTypes.Interventions,
         dpSource: Extract.Groups.SOURCENAMES.TIMEPOINT,
-        dpName: 'Timepoint Name',
+        //dpName: 'Timepoint Name',
         dpFieldtoUpdate: "Name",
         config: {
             //fieldLabel: 'Timpoint',
@@ -2382,11 +2428,11 @@ const ComponentList = {
         name: "TimepointNo",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Timepoint No",
+        //dpValue: "Timepoint No",
         cellText: "Timepoint No",
         dpSourceType: Extract.EntityTypes.Interventions,
         dpSource: Extract.Groups.SOURCENAMES.TIMEPOINT,
-        dpName: 'Timepoint Value',
+        //dpName: 'Timepoint Value',
         dpFieldtoUpdate: "Value",
         config: {
             //fieldLabel: 'Timpoint #',
@@ -2399,11 +2445,11 @@ const ComponentList = {
         name: "TimepointInfo",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Timepoint Info",
-        cellText: "Timepoint Info",
+        //dpValue: "Timepoint Info",
+        cellText: "Timepoint Information",
         dpSourceType: Extract.EntityTypes.Interventions,
         dpSource: Extract.Groups.SOURCENAMES.TIMEPOINT,
-        dpName: 'Timepoint Information',
+        //dpName: 'Timepoint Information',
         dpFieldtoUpdate: 'AddInfo',
         config: {
             //fieldLabel: 'Timpoint Info',
@@ -2600,6 +2646,8 @@ const ComponentList = {
                         ////window.setTimeout(() => {
                         ////    IUI.CreateComponent();
                         ////}, 250);
+
+                        IUI.SetTDAfterDelete(obj[CurrentTableObject.TableId]);
                     }).catch(() => {
                         //console.log("Promise Rejected");
                     });
@@ -2670,7 +2718,7 @@ const ComponentList = {
         name: "SessionFrequency",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Session Frequency",
+        //dpValue: "Session Frequency",
         cellText: "Session Frequency",
         dpSourceType: Extract.EntityTypes.Interventions,
         dpSource: Extract.Groups.SOURCENAMES.SESSION,
@@ -2687,7 +2735,7 @@ const ComponentList = {
         name: "SessionFrequencyUnit",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Session Frequency Unit",
+        //dpValue: "Session Frequency Unit",
         cellText: "Session Frequency Unit",
         dpSourceType: Extract.EntityTypes.Interventions,
         dpSource: Extract.Groups.SOURCENAMES.SESSION,
@@ -2705,7 +2753,7 @@ const ComponentList = {
         name: "SessionDuration",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Session Duration",
+        //dpValue: "Session Duration",
         cellText: "Session Duration",
         dpSourceType: Extract.EntityTypes.Interventions,
         dpSource: Extract.Groups.SOURCENAMES.SESSION,
@@ -2722,7 +2770,7 @@ const ComponentList = {
         name: "SessionDurationUnit",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Session Duration Unit",
+        //dpValue: "Session Duration Unit",
         cellText: "Session Duration Unit",
         dpSourceType: Extract.EntityTypes.Interventions,
         dpSource: Extract.Groups.SOURCENAMES.SESSION,
@@ -2740,7 +2788,7 @@ const ComponentList = {
         name: "TotalSessions",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Total Sessions",
+        //dpValue: "Total Sessions",
         cellText: "Total Sessions",
         dpSourceType: Extract.EntityTypes.Interventions,
         dpSource: Extract.Groups.SOURCENAMES.SESSION,
@@ -2757,7 +2805,7 @@ const ComponentList = {
         name: "TotalSessionsUnit",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Total Sessions Unit",
+        //dpValue: "Total Sessions Unit",
         cellText: "Total Sessions Unit",
         dpSourceType: Extract.EntityTypes.Interventions,
         dpSource: Extract.Groups.SOURCENAMES.SESSION,
@@ -2775,7 +2823,7 @@ const ComponentList = {
         name: "TotalDuration",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Total Duration",
+        //dpValue: "Total Duration",
         cellText: "Total Duration",
         dpSourceType: Extract.EntityTypes.Interventions,
         dpSource: Extract.Groups.SOURCENAMES.SESSION,
@@ -2792,7 +2840,7 @@ const ComponentList = {
         name: "TotalDurationUnit",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Total Duration Unit",
+        //dpValue: "Total Duration Unit",
         cellText: "Total Duration Unit",
         dpSourceType: Extract.EntityTypes.Interventions,
         dpSource: Extract.Groups.SOURCENAMES.SESSION,
@@ -2810,7 +2858,7 @@ const ComponentList = {
         name: "ExperienceCertification",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Experience/Certification",
+        //dpValue: "Experience/Certification",
         cellText: "Experience/Certification",
         dpSourceType: Extract.EntityTypes.Interventions,
         dpSource: Extract.Groups.SOURCENAMES.SESSION,
@@ -2827,7 +2875,7 @@ const ComponentList = {
         name: "TypeOfCounseling",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Type of Counseling",
+        //dpValue: "Type of Counseling",
         cellText: "Type of Counseling",
         dpSourceType: Extract.EntityTypes.Interventions,
         dpSource: Extract.Groups.SOURCENAMES.SESSION,
@@ -2845,7 +2893,7 @@ const ComponentList = {
         name: "InterventionObjective",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Intervention Objective",
+        //dpValue: "Intervention Objective",
         cellText: "Intervention Objective",
         dpSourceType: Extract.EntityTypes.Interventions,
         dpSource: Extract.Groups.SOURCENAMES.SESSION,
@@ -2862,7 +2910,7 @@ const ComponentList = {
         name: "TopicCovered",
         cssClass: "tdCls",
         columnIndex: ColumnIdx++,
-        dpValue: "Topic Covered",
+        //dpValue: "Topic Covered",
         cellText: "Topic Covered",
         dpSourceType: Extract.EntityTypes.Interventions,
         dpSource: Extract.Groups.SOURCENAMES.SESSION,
@@ -2899,48 +2947,49 @@ class Config {
         });
     }
 
-    static setTDValue(value, rawValue) {
-        //currentTD.innerHTML = rawValue;
-        //currentTD.setAttribute(TdAttr.DPVal, value);
-        let actvTD = IUI.prevTD;
-        if (typeof actvTD === 'undefined') {
-            actvTD = IUI.currentTD;
-        }
+    //static setTDValue(value, rawValue) {
+    //    //currentTD.innerHTML = rawValue;
+    //    //currentTD.setAttribute(TdAttr.DPVal, value);
+    //    let actvTD = IUI.prevTD;
+    //    if (typeof actvTD === 'undefined') {
+    //        actvTD = IUI.currentTD;
+    //    }
 
-        if (actvTD.length > 0) {
-            let _cmpTyp = actvTD.attr(TdAttr.Type);
-            if (!actvTD.hasClass('trDisplayNone') && _cmpTyp != ComponentType.ExtractActionButton) {
-                let _dpId = actvTD.attr(TdAttr.DPId);
-                let _Cnfg = actvTD.attr(TdAttr.Config);
-                let obj = {};
-                obj[_Cnfg["dpFieldtoUpdate"]] = Ext.isEmpty(value) ? "" : value;
-                Extract.Helper.setEntity(Extract.EntityTypes.Datapoints, _dpId, obj);
-                Extract.Data.Datapoints[_dpId][ComponentList['FixedDose']["dpFieldtoUpdate"]] = obj[_Cnfg["dpFieldtoUpdate"]];
-                if (!Ext.isEmpty(rawValue)) {
-                    $(actvTD).html(rawValue);
-                    $(actvTD).attr(TdAttr.DPVal, value);
-                }
-            }
-        }
-    }
+    //    if (actvTD.length > 0) {
+    //        let _cmpTyp = actvTD.attr(TdAttr.Type);
+    //        if (!actvTD.hasClass('trDisplayNone') && _cmpTyp != ComponentType.ExtractActionButton) {
+    //            let _dpId = actvTD.attr(TdAttr.DPId);
+    //            let _Cnfg = actvTD.attr(TdAttr.Config);
+    //            let obj = {};
+    //            obj[_Cnfg["dpFieldtoUpdate"]] = Ext.isEmpty(value) ? "" : value;
+    //            Extract.Helper.setEntity(Extract.EntityTypes.Datapoints, _dpId, obj);
+    //            //Extract.Data.Datapoints[_dpId][ComponentList['FixedDose']["dpFieldtoUpdate"]] = obj[_Cnfg["dpFieldtoUpdate"]];
+    //            if (!Ext.isEmpty(rawValue)) {
+    //                //$(actvTD).html(rawValue);
+    //                //$(actvTD).attr(TdAttr.DPVal, value);
 
-    //static AddInfo() {
-    //    return {
-    //        emptyText: 'Intervention',
-    //        listeners: {
-    //            //blur: (cmp, eOpts) => {
-    //            //    if (!Ext.isEmpty(cmp.getValue())) {
-    //            //        IUI.currentTD[0].innerHTML = cmp.getValue();
-    //            //    }
-    //            //},
-    //            beforedestroy: (cmp, eOpts) => {
-    //                if (!Ext.isEmpty(cmp.getValue())) {
-    //                    this.CommonMetod(IUI.currentTD[0], cmp.getValue(), cmp.getRawValue());
-    //                }
     //            }
     //        }
     //    }
     //}
+
+    ////static AddInfo() {
+    ////    return {
+    ////        emptyText: 'Intervention',
+    ////        listeners: {
+    ////            //blur: (cmp, eOpts) => {
+    ////            //    if (!Ext.isEmpty(cmp.getValue())) {
+    ////            //        IUI.currentTD[0].innerHTML = cmp.getValue();
+    ////            //    }
+    ////            //},
+    ////            beforedestroy: (cmp, eOpts) => {
+    ////                if (!Ext.isEmpty(cmp.getValue())) {
+    ////                    this.CommonMetod(IUI.currentTD[0], cmp.getValue(), cmp.getRawValue());
+    ////                }
+    ////            }
+    ////        }
+    ////    }
+    ////}
 
     static AppendProps(config, props) {
         let keys = Object.keys(props);

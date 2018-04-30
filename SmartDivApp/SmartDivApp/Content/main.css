@@ -21,7 +21,7 @@
     min-width: 167px;
     border: 1px solid #bfbfbf;
     text-align: center;
-    padding: 8px;
+    /*padding: 8px;*/
     background-color: white;
     vertical-align: middle;
 }
@@ -75,7 +75,7 @@
     background-color: white;
 }
 
-input[type=text], textarea, select {
+/*input[type=text], textarea, select, div.divFld {
     /*-moz-transition: all 0.3s ease-in-out;
     -o-transition: all 0.3s ease-in-out;
     -webkit-transition: all 0.3s ease-in-out;
@@ -86,22 +86,26 @@ input[type=text], textarea, select {
     -moz-transition: all 0.3s ease-in-out;
     -o-transition: all 0.3s ease-in-out;
     -webkit-transition: all 0.3s ease-in-out;
-    transition: all 0.3s ease-in-out;*/
+    transition: all 0.3s ease-in-out;*u/
     outline: none;
-    border: 1px solid #DDDDDD;
+    border: 0px solid #bfbfbf;
+    -moz-box-shadow: 0 0 5px #51cbee;
+    -webkit-box-shadow: 0 0 5px #51cbee;
+    box-shadow: 0 0 5px #51cbee;
+    border: 1px solid #51cbee;
 }
 
-    input[type=text]:focus, textarea:focus, select:focus {
+    input[type=text]:focus, textarea:focus, div.divFld:focus {
         /*-moz-box-shadow: 0 0 5px #51cbee;
         -webkit-box-shadow: 0 0 5px #51cbee;
         box-shadow: 0 0 5px #51cbee;
         padding: 3px 0px 3px 3px;
-        margin: 5px 1px 3px 0px;*/
+        margin: 5px 1px 3px 0px;*u/
         -moz-box-shadow: 0 0 5px #51cbee;
         -webkit-box-shadow: 0 0 5px #51cbee;
         box-shadow: 0 0 5px #51cbee;
         border: 1px solid #51cbee;
-    }
+    }*/
 
 
 div.divFld {
@@ -113,12 +117,16 @@ div.divFld {
     padding: 3px 0px 3px 3px;
     margin: 5px 1px 3px 0px;
     border: 1px solid #DDDDDD;*/
-    -moz-transition: all 0.3s ease-in-out;
-    -o-transition: all 0.3s ease-in-out;
-    -webkit-transition: all 0.3s ease-in-out;
-    transition: all 0.3s ease-in-out;
+    -moz-transition: all 0.1s ease-in-out;
+    -o-transition: all 0.1s ease-in-out;
+    -webkit-transition: all 0.1s ease-in-out;
+    transition: all 0.1s ease-in-out;
     outline: none;
-    border: 0px solid #DDDDDD;
+    /*border: 0px solid #bfbfbf;*/
+    -moz-box-shadow: 0 0 5px #51cbee;
+    -webkit-box-shadow: 0 0 5px #51cbee;
+    box-shadow: 0 0 5px #51cbee;
+    border: 1px solid #51cbee;
 }
 
     div.divFld:focus {
@@ -130,27 +138,10 @@ div.divFld {
         border: 1px solid #51cbee;*/
         -moz-box-shadow: 0 0 5px #51cbee;
         -webkit-box-shadow: 0 0 5px #51cbee;
-        box-shadow: 0 0 5px #51cbee;
-        border: 0px solid #51cbee;
+        box-shadow: 0 0 5px #51cbee;        
+        border: 1px solid #51cbee;
     }
 
-
-
-.btn-treatment-tag {
-    /*-webkit-border-radius: 15px;
-    -moz-border-radius: 15px;
-    -ms-border-radius: 15px;
-    -o-border-radius: 15px;
-    border-radius: 15px;
-    border: none;*/
-    /*background-color: none !important;
-    background: none !important;
-    border: none !important;
-    opacity: 1.0 !important;*/
-    opacity: 1.0;
-    border-radius: 19px;
-    background-image: none;
-}
 
 .Btn {
     background-color: none;
@@ -211,6 +202,7 @@ div.divFld {
 .btn-treatment-tag-b {
     background-color: #1257e8;
     border-color: #1257e8;
+    border: 1px solid #1257e8;
     /*color: #ffffff !important;*/
     cursor: pointer;
 }
@@ -218,6 +210,7 @@ div.divFld {
 .btn-treatment-tag-r {
     background-color: #f51010;
     border-color: #f51010;
+    border: 1px solid #f51010;
     /*color: #ffffff !important;*/
     cursor: pointer;
 }
@@ -225,6 +218,7 @@ div.divFld {
 .btn-treatment-tag-i {
     background-color: #645f5f;
     border-color: #645f5f;
+    border: 1px solid #645f5f;
     /*color: #ffffff !important;*/
     cursor: pointer;
 }
@@ -232,6 +226,7 @@ div.divFld {
 .btn-treatment-tag-c {
     background-color: #fff;
     border-color: #645f5f;
+    border: 1px solid #645f5f;
     /*color: #000000 !important;*/
     cursor: pointer;
 }
@@ -258,4 +253,32 @@ div.divFld {
     opacity: 1.0;
     border-radius: 19px;
     background-image: none;
+}
+
+
+
+
+.treatmenttag {
+    width: 25px;
+    height: 24px;
+    /*margin-top: 2px;*/
+    /*background-color: #f51010;*/
+    -moz-border-radius: 25px;
+    -webkit-border-radius: 25px;
+    border-radius: 25px;
+    /* border: 1px solid #f51010; */
+    display: inline-block;
+    cursor: pointer;
+    /*color: #ffffff;*/
+    /* font-family: Arial; */
+    font-size: 12px;
+    font-weight: bold;
+    padding: 4px;  /*7px;*/
+    text-decoration: none;
+    /* text-shadow: 0px 1px 0px #f51010; */
+}
+
+
+.empty-val {
+    color: #bfbfbf;
 }

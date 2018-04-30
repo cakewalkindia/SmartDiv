@@ -238,7 +238,7 @@ class Drug extends Intervention {
 
             let rowFD = this.CreateFixedDoseTR(intSetId, rwInt, trClass);
 
-            let cell = this.CreateTD(rowFD, ComponentList.FixedDoseIntervention, intSetId, this.GetDPfromDPList(dpList[i], ComponentList.FixedDoseConcentration["dpName"]).id);
+            let cell = this.CreateTD(rowFD, ComponentList.FixedDoseIntervention, intSetId, this.GetDPfromDPList(dpList[i], ComponentList.FixedDoseIntervention["dpName"]).id);
             //row.appendChild(cell);
 
             cell = this.CreateTD(rowFD, ComponentList.FixedDoseConcentration, intSetId, this.GetDPfromDPList(dpList[i], ComponentList.FixedDoseConcentration["dpName"]).id);
@@ -332,12 +332,19 @@ class Drug extends Intervention {
     DeleteFixedDose(intSetId, RowIndexFixedDose) {
         
         let tBody = IUI.currentTD.closest('tbody');
+        //let _trTyp = IUI.currentTD.closest('tr').attr(TrAttr.TRType);
         let curFDRow = tBody.find(`tr[${TrAttr.TRType}=${TRType.FixedDose}]tr[${TrAttr.RowIndexIntervention}=${intSetId}]tr[${TrAttr.RowIndexFixedDose}=${RowIndexFixedDose}]`);
 
         this.DeleteDP(intSetId, curFDRow.find('td'));
         curFDRow.remove();
 
         let lstCnt = tBody.find(`tr[${TrAttr.TRType}=${TRType.FixedDose}]tr[${TrAttr.RowIndexIntervention}=${intSetId}]`);
+
+        //if (_trTyp == TRType.FixedDose) {
+        //    let _fdu = lstCnt.find(`td[config='${ComponentList.FixedDoseUnit.name}']`);
+        //    IUI.currentTD = $(_fdu[_fdu.length - 1]);
+        //    this.SmartDivPosition();
+        //}
 
         if (lstCnt.length != 0) {
             let lstTdAdd = lstCnt.find(`td[config='AddFixedDose']`);

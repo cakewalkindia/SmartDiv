@@ -86,11 +86,13 @@ class Intervention {
 
                 if (cmpType == ComponentType.ExtractButton) {
                     txt.width(IUI.currentTD[0].offsetWidth - 2);
-                    txt.offset({ top: IUI.currentTD.offset().top + 1, left: IUI.currentTD.offset().left + 1 });
+                    txt.height(IUI.currentTD[0].offsetHeight - 2);
+                    txt.offset({ top: IUI.currentTD.offset().top + 0.5, left: IUI.currentTD.offset().left + 0.5 });
                 } else {
                     //txt.width(IUI.currentTD.width());
-                    txt.width(IUI.currentTD[0].offsetWidth);
-                    txt.offset({ top: IUI.currentTD.offset().top, left: IUI.currentTD.offset().left });
+                    txt.width(IUI.currentTD[0].offsetWidth - 2);
+                    txt.height(IUI.currentTD[0].offsetHeight - 2);
+                    txt.offset({ top: IUI.currentTD.offset().top, left: IUI.currentTD.offset().left});
                 }
 
                 
@@ -311,15 +313,15 @@ class Intervention {
     SetCurrentTD(_curTD) {
         let isValid = true;
         if (!_curTD.hasClass('trDisplayNone')) {
-            let prevTDDPVal = IUI.currentTD.attr(TdAttr.DPVal);
+            let prevTDDPId = IUI.currentTD.attr(TdAttr.DPId);
             let prevTDType = IUI.currentTD.attr(TdAttr.Type);
-            if (prevTDDPVal != undefined && (prevTDType != ComponentType.ExtractActionButton)) {
+            if (prevTDDPId != undefined && (prevTDType != ComponentType.ExtractActionButton)) {
                 IUI.prevTD = IUI.currentTD;
             }
             IUI.currentTD = _curTD;
-            let cmpDPVal = IUI.currentTD.attr(TdAttr.DPVal);
+            let cmpDPId = IUI.currentTD.attr(TdAttr.DPId);
             let cmpType = IUI.currentTD.attr(TdAttr.Type);
-            if (cmpDPVal == undefined || (cmpType == ComponentType.ExtractActionButton)) {
+            if (cmpDPId == undefined || (cmpType == ComponentType.ExtractActionButton)) {
                 isValid = true;
             } else {
                 isValid = false;
@@ -328,6 +330,13 @@ class Intervention {
             IUI.currentTD = _curTD;
         }
         return isValid;
+    }
+
+    SetTDAfterDelete(tableId) {
+        IUI.currentTD = $('td:first', $(`#${tableId}`));
+        IUI.SmartDivPosition();
+        //window.setTimeout(() => {
+        IUI.CreateComponent();
     }
 
     ComputeTD(IsShiftKey) {
@@ -701,15 +710,15 @@ class Intervention {
         switch (cmpType) {
             case ComponentType.ExtractText:
                 //new MyExtTextField(IUI.currentTD).CreateComponent(ComponentList[tdType][cmpConfig]['config']);
-                new MyExtTextField(ComponentList[cmpConfig]['config']);
+                new MyExtTextField(ComponentList[cmpConfig]);
                 break;
             case ComponentType.ExtractDropdown:
                 //new MyExtDropdownField(IUI.currentTD).CreateComponent(ComponentList[tdType][cmpConfig]['config']);
-                new MyExtDropdownField(ComponentList[cmpConfig]['config']);
+                new MyExtDropdownField(ComponentList[cmpConfig]);
                 break;
             case ComponentType.ExtractButton:
                 //new MyExtButtonField(IUI.currentTD).CreateComponent(ComponentList[tdType][cmpConfig]['config']);
-                new MyExtButtonField(ComponentList[cmpConfig]['config']);
+                new MyExtButtonField(ComponentList[cmpConfig]);
                 break;
             //case ComponentType.ExtractAddInfo:
             //    new MyExtAddInfoField(me.currentTD).CreateComponent(Config[cmpConfig]());
@@ -742,30 +751,57 @@ class Intervention {
 
     GetTDText(component, dpValue) {
         let tdText = dpValue;
-        if (component['name'] == ComponentList.FixedDose["name"]) {
-            tdText = ComponentList.FixedDose.getTDDispValue(dpValue);
-        } 
+        //if (component['name'] == ComponentList.FixedDose["name"]) {
+        if (component.hasOwnProperty("displayValueTD")) {
+            tdText = component.displayValueTD(dpValue);
+        }
         return tdText;
     }
 
-    CreateDP(component, typeId, dpId) {
-        //if (component['name'] == ComponentList.StudyPhase["name"]) {
-
-        //} else {
-            let dp = {};
-            if (dpId) {
-                dp = Extract.Data.Datapoints[dpId]
-            } else {
-                let _dpVal = "";
-                if (!Ext.isEmpty(component['dpDefaultValue'])) {
-                    _dpVal = component['dpDefaultValue'];
+    SetTDValue(dpValue, rawValue) {
+        //currentTD.innerHTML = rawValue;
+        //currentTD.setAttribute(TdAttr.DPVal, value);
+        let actvTD = IUI.prevTD;
+        if (typeof actvTD === 'undefined') {
+            actvTD = IUI.currentTD;
+        }
+        
+        if (actvTD.length > 0) {
+            let _cmpTyp = actvTD.attr(TdAttr.Type);
+            if (!actvTD.hasClass('trDisplayNone') && _cmpTyp != ComponentType.ExtractActionButton) {
+                let _dpId = actvTD.attr(TdAttr.DPId);
+                let _cnfgName = actvTD.attr(TdAttr.Config);
+                let _dp = Extract.Helper.getEntity(Extract.EntityTypes.Datapoints, _dpId);
+                let obj = {};
+                let _dpFUpd = ComponentList[_cnfgName]['dpFieldtoUpdate'];
+                obj[_dpFUpd] = Ext.isEmpty(dpValue) ? "" : dpValue;
+                Extract.Helper.setEntity(Extract.EntityTypes.Datapoints, _dpId, obj);
+                Extract.Data.Datapoints[_dpId][_dpFUpd] = dpValue;
+                //Extract.Data.Datapoints[_dpId][ComponentList['FixedDose']["dpFieldtoUpdate"]] = obj[_Cnfg["dpFieldtoUpdate"]];
+                if (!Ext.isEmpty(rawValue)) {
+                    //$(actvTD).html(rawValue);
+                    //$(actvTD).attr(TdAttr.DPVal, value);
+                    this.AddCellText(actvTD[0], ComponentList[_cnfgName], rawValue);
                 }
-                dp = Extract.Helper.createDatapointAddToSource(Extract.Datapoint.VALUETYPE.MEMO, component['dpName'],
-                    _dpVal, Extract.Datapoint.STATE.ADDED, 1, 1, component['dpSourceType'], typeId, component['dpSource']);
-
             }
-            return dp;
-        //}
+        }
+    }
+
+    AddCellText(cell, component, dpVal) {
+        cell.innerHTML = "";
+        let el = document.createElement('span');
+
+        if (Ext.isEmpty(dpVal)) {
+            //let _cellText = document.createTextNode(this.GetTDText(component, _dpVal));
+            dpVal = component['cellText']
+            if (dpVal.length > 18) {
+                dpVal = dpVal.substring(0, 18) + "...";
+            }
+            
+            el.setAttribute("class", "empty-val");
+        }
+        el.innerText = Ext.htmlEncode(dpVal); //Ext.encode(dpVal);
+        cell.appendChild(el);
     }
 
     CreateTD(row, component, typeId, dpId, tdCls) {
@@ -794,7 +830,7 @@ class Intervention {
         cell.setAttribute(TdAttr.Type, component['compType']);
         cell.setAttribute(TdAttr.ColumnIndex, component['columnIndex']);
         cell.setAttribute(TdAttr.Config, component['name']);
-        cell.setAttribute(TdAttr.Title, component['dpName']);
+        cell.setAttribute(TdAttr.Title, component['cellText']);
 
         //let _dpVal = "";
         //if (dpId) {
@@ -817,37 +853,50 @@ class Intervention {
         cell.setAttribute(TdAttr.DPId, _dp.id);
         let _dpVal = _dp[component['dpFieldtoUpdate']];
 
-        cell.setAttribute(TdAttr.DPVal, _dpVal);
+        //cell.setAttribute(TdAttr.DPVal, _dpVal);
 
         //cell.setAttribute(TdAttr.TDType, component['type']);
         if (typeof component['compType'] !== 'undefined' && component['compType'] != ComponentType.ExtractActionButton) {
             cell.addEventListener('click', (e) => this.OnTDClick(cell, e));
             //cell.addEventListener('load', (e) => top.IUI.OnTDClick(cell, e));            
         }
-        //if (!Ext.isEmpty(component['cellText'])) {
-        if (Ext.isEmpty(_dpVal)) {
-            _dpVal = component['dpName']
-            if (_dpVal.length > 18) {
-                _dpVal = _dpVal.substring(0, 18) + "...";
-            }
+        ////if (!Ext.isEmpty(component['cellText'])) {
+        //if (Ext.isEmpty(_dpVal)) {
+        //    _dpVal = component['cellText']
+        //    if (_dpVal.length > 18) {
+        //        _dpVal = _dpVal.substring(0, 18) + "...";
+        //    }
+        //}
+
+        
+        //let _cellText = document.createTextNode(this.GetTDText(component,_dpVal));
+        //cell.appendChild(_cellText);
+        
+        ////}
+
+        ////let data_cls = component['name'];
+        ////if (data_cls == 'FixedDoseIntervention') {
+        ////    data_cls = ComponentList.Intervention.Intervention.name;
+        ////} else if (data_cls == 'FixedDoseConcentration') {
+        ////    data_cls = ComponentList.Intervention.Manufacturer.name;
+        ////} else if (data_cls == 'FixedDoseUnit') {
+        ////    data_cls = ComponentList.Intervention.Brand.name;
+        ////}
+
+        ////cell.setAttribute(TdAttr.DataClass, data_cls);
+
+        //if (component['compType'] == ComponentType.ExtractButton) {
+        //    new MyExtActionButtonField(cell, component['config']);
+        //} else 
+        if (component.hasOwnProperty("elmTD")) {
+            //cell.appendChild(component.elmTD(_dpVal));
+            component.elmTD(cell, _dpVal);
+        } else {
+            //let _cellText = document.createTextNode(this.GetTDText(component, _dpVal));
+            this.AddCellText(cell, component, _dpVal);
         }
-
-        
-        let _cellText = document.createTextNode(this.GetTDText(component,_dpVal));
-        cell.appendChild(_cellText);
-        
         //}
 
-        //let data_cls = component['name'];
-        //if (data_cls == 'FixedDoseIntervention') {
-        //    data_cls = ComponentList.Intervention.Intervention.name;
-        //} else if (data_cls == 'FixedDoseConcentration') {
-        //    data_cls = ComponentList.Intervention.Manufacturer.name;
-        //} else if (data_cls == 'FixedDoseUnit') {
-        //    data_cls = ComponentList.Intervention.Brand.name;
-        //}
-
-        //cell.setAttribute(TdAttr.DataClass, data_cls);
         row.appendChild(cell);
         //return cell;
         return dpId;
@@ -877,6 +926,29 @@ class Intervention {
     //#endregion
 
     //#region DP Operation
+    CreateDP(component, typeId, dpId) {
+        //if (component['name'] == ComponentList.StudyPhase["name"]) {
+
+        //} else {
+        let dp = {};
+        if (dpId) {
+            dp = Extract.Data.Datapoints[dpId]
+        } else {
+            let _dpNm = "", _dpVal = "";
+            if (!Ext.isEmpty(component['dpName'])) {
+                _dpNm = component['dpName'];
+            }
+            if (!Ext.isEmpty(component['dpDefaultValue'])) {
+                _dpVal = component['dpDefaultValue'];
+            }
+            dp = Extract.Helper.createDatapointAddToSource(Extract.Datapoint.VALUETYPE.MEMO, _dpNm,
+                _dpVal, Extract.Datapoint.STATE.ADDED, 1, 1, component['dpSourceType'], typeId, component['dpSource']);
+
+        }
+        return dp;
+        //}
+    }
+
     DeleteDP(intSetId, lstTD) {
         for (var i = 0; i < lstTD.length; i++) {
             let dpId = $(lstTD[i]).attr(TdAttr.DPId);
